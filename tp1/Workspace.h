@@ -3,22 +3,20 @@
 
 #include <string>
 
-#include <opencv2/core/core.hpp>
+#include "Image.h"
 
 class Workspace
 {
 private:
 
-    cv::Mat _originalImage;
-    cv::Mat _grayscaleImage;
+    Image _image;
 
 public:
 
     Workspace();
     Workspace(const std::string& imagePath);
 
-    const cv::Mat& originalImage() const;
-    const cv::Mat& grayscaleImage() const;
+    const Image& image() const { return _image; }
 
 public:
 

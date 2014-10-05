@@ -15,12 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
     Workspace.cpp \
     Tp1Application.cpp \
-    WorkspaceWindow.cpp
+    WorkspaceWindow.cpp \
+    Image.cpp
 
 HEADERS  += \
     Workspace.h \
     Tp1Application.h \
-    WorkspaceWindow.h
+    WorkspaceWindow.h \
+    Image.h
 
 FORMS    += \
     WorkspaceWindow.ui

@@ -28,15 +28,15 @@ WorkspaceWindow::~WorkspaceWindow()
 
 void WorkspaceWindow::updateImageView()
 {
-    cv::Mat image = _workspace->originalImage();
+    cv::Mat imageMatrix = _workspace->image().matrix();
 
-    QImage* pImage = new QImage(image.cols, image.rows, QImage::Format_RGB888);
+    QImage* pImage = new QImage(imageMatrix.cols, imageMatrix.rows, QImage::Format_RGB888);
 
-    for (int y = 0; y < image.rows; ++y)
+    for (int y = 0; y < imageMatrix.rows; ++y)
     {
-        for (int x = 0; x < image.cols; ++x)
+        for (int x = 0; x < imageMatrix.cols; ++x)
         {
-            cv::Vec3b pix = image.at<cv::Vec3b>(cv::Point(x, y));
+            cv::Vec3b pix = imageMatrix.at<cv::Vec3b>(cv::Point(x, y));
             pImage->setPixel(x, y, qRgb(pix[0], pix[1], pix[2]));
         }
     }
