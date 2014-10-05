@@ -13,10 +13,16 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        MainWindow.cpp
+    Workspace.cpp \
+    Tp1Application.cpp \
+    WorkspaceWindow.cpp
 
-HEADERS  += MainWindow.h
+HEADERS  += \
+    Workspace.h \
+    Tp1Application.h \
+    WorkspaceWindow.h
 
-FORMS    += MainWindow.ui
+FORMS    += \
+    WorkspaceWindow.ui
 
 LIBS += `pkg-config opencv --libs`

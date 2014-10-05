@@ -1,11 +1,11 @@
 #include "MainWindow.h"
-#include <QApplication>
+
+#include "Tp1Application.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    Tp1Application a(argc, argv);
+    a.addNewWorkspace();
 
     return a.exec();
 }
