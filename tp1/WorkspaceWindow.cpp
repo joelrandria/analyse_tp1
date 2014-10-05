@@ -1,14 +1,69 @@
 #include "WorkspaceWindow.h"
 #include "ui_WorkspaceWindow.h"
 
-WorkspaceWindow::WorkspaceWindow(QWidget *parent) :
+#include <QFileDialog>
+#include <QUrl>
+
+#include <opencv2/core/core.hpp>
+
+#include <iostream>
+
+#include "Tp1Application.h"
+#include "Workspace.h"
+
+WorkspaceWindow::WorkspaceWindow(Workspace* workspace, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::WorkspaceWindow)
 {
     ui->setupUi(this);
-}
 
+    _workspace = workspace;
+
+    updateImageView();
+}
 WorkspaceWindow::~WorkspaceWindow()
 {
     delete ui;
+}
+
+void WorkspaceWindow::updateImageView()
+{
+    cv::Mat image = _workspace->originalImage();
+
+    QImage* pImage = new QImage(image.cols, image.rows, QImage::Format_RGB888);
+
+    for (int y = 0; y < image.rows; ++y)
+    {
+        for (int x = 0; x < image.cols; ++x)
+        {
+            cv::Vec3b pix = image.at<cv::Vec3b>(cv::Point(x, y));
+            pImage->setPixel(x, y, qRgb(pix[0], pix[1], pix[2]));
+        }
+    }
+
+    ui->pixmapLabel->setPixmap(QPixmap::fromImage(*pImage));
+}
+
+void WorkspaceWindow::on_actionNewWorkspace_triggered()
+{
+    tp1App()->addNewWorkspace();
+}
+void WorkspaceWindow::on_actionOpenFile_triggered()
+{
+    QFileDialog fd(this, tr("Ouvrir une image"));
+    fd.setFileMode(QFileDialog::ExistingFile);
+    fd.setNameFilter(tr("Fichiers images (*.png *.jpg *.bmp)"));
+
+    if (fd.exec())
+    {
+        QString filePath = fd.selectedFiles().first();
+        _workspace->loadImage(filePath.toUtf8().data());
+
+        updateImageView();
+        setWindowTitle(QUrl(filePath).fileName());
+    }
+}
+void WorkspaceWindow::on_actionCloseFile_triggered()
+{
+    close();
 }

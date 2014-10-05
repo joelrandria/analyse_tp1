@@ -7,16 +7,32 @@ namespace Ui {
 class WorkspaceWindow;
 }
 
+class Workspace;
+
 class WorkspaceWindow : public QMainWindow
 {
     Q_OBJECT
 
+private:
+
+    Ui::WorkspaceWindow *ui;
+
+    Workspace* _workspace;
+
 public:
-    explicit WorkspaceWindow(QWidget *parent = 0);
+
+    explicit WorkspaceWindow(Workspace* workspace, QWidget *parent = 0);
     ~WorkspaceWindow();
 
+private slots:
+
+    void on_actionOpenFile_triggered();
+    void on_actionCloseFile_triggered();
+    void on_actionNewWorkspace_triggered();
+
 private:
-    Ui::WorkspaceWindow *ui;
+
+    void updateImageView();
 };
 
 #endif // WORKSPACEWINDOW_H
