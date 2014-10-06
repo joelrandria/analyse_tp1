@@ -22,8 +22,7 @@ public:
 
     friend Tp1Application* tp1App();
 
-    void addNewWorkspace();
-    void addNewWorkspace(const std::string& imagePath);
+    void addNewWorkspace(const std::string& imagePath = "");
 
 private:
 

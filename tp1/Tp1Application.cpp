@@ -15,16 +15,15 @@ Tp1Application::Tp1Application(int& argc, char** argv)
     _app = this;
 }
 
-void Tp1Application::addNewWorkspace()
-{
-    Workspace* ws = new Workspace();
-    _workspaces.push_back(ws);
-
-    createWorkspaceView(ws);
-}
 void Tp1Application::addNewWorkspace(const std::string &imagePath)
 {
-    Workspace* ws = new Workspace(imagePath);
+    Workspace* ws = 0;
+
+    if (imagePath.length() > 0)
+        ws = new Workspace(imagePath);
+    else
+        ws = new Workspace();
+
     _workspaces.push_back(ws);
 
     createWorkspaceView(ws);

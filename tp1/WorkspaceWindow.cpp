@@ -37,7 +37,7 @@ void WorkspaceWindow::updateImageView()
         for (int x = 0; x < imageMatrix.cols; ++x)
         {
             cv::Vec3b pix = imageMatrix.at<cv::Vec3b>(cv::Point(x, y));
-            pImage->setPixel(x, y, qRgb(pix[0], pix[1], pix[2]));
+            pImage->setPixel(x, y, qRgb(pix[2], pix[1], pix[0]));
         }
     }
 
