@@ -3,6 +3,7 @@
 #include "Tp1Application.h"
 #include "Workspace.h"
 #include "EdgeDetectionConfigDialog.h"
+#include "EdgeDetectionWindow.h"
 
 #include <QFileDialog>
 #include <QUrl>
@@ -70,13 +71,10 @@ void WorkspaceWindow::on_actionCloseFile_triggered()
 
 void WorkspaceWindow::on_actionEdgeDetection_triggered()
 {
-    GradientKernel gk;
-
-    EdgeDetectionConfigDialog edd(this);
-    if (!edd.exec())
+    EdgeDetectionConfigDialog configDialog(this);
+    if (!configDialog.exec())
         return;
 
-    gk = edd.getSelectedKernel();
-
-    int test = 42;
+    EdgeDetectionWindow* detectionWindow = new EdgeDetectionWindow(_workspace->image(), configDialog.getSelectedKernel());
+    detectionWindow->show();
 }

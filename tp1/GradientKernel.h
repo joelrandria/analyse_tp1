@@ -10,13 +10,15 @@ class GradientKernel
 {
 private:
 
-    static GradientKernel* _prewitt2d;
-
     MaskVec _masks;
+    float _normalizationFactor;
+
+    static GradientKernel* _prewitt2d;
 
 public:
 
     const MaskVec& masks() const { return _masks; }
+    float getNormalizationFactor() const { return _normalizationFactor; }
 
     static const GradientKernel& Prewitt2D();
 

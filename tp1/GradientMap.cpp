@@ -2,26 +2,50 @@
 #include "GradientMap.h"
 #include "Gradient.h"
 
-GradientMap::GradientMap(int rows, int cols)//image.rows
+GradientMap::GradientMap(int rows, int cols)
+{
+    resize(rows, cols);
+}
+GradientMap::GradientMap(const Image &image, const GradientKernel &kernel)
+{
+    buildFromImage(image, kernel);
+}
+
+int GradientMap::width() const
+{
+    if (height() > 0)
+        return _gradients[0].size();
+    return 0;
+}
+int GradientMap::height() const
+{
+    return _gradients.size();
+}
+
+const Gradient &GradientMap::getGradientAt(int row, int col) const
+{
+    return _gradients[row][col];
+}
+
+void GradientMap::buildFromImage(const Image &image, const GradientKernel& kernel)
+{
+    cv::Mat grayscaleMat = image.grayscaleMatrix();
+
+    resize(grayscaleMat.rows, grayscaleMat.cols);
+
+    for (int row = 0; row < grayscaleMat.rows; ++row)
+        for (int col = 0; col < grayscaleMat.cols; ++col)
+            _gradients[row][col] = computeGradientAt(grayscaleMat, row, col, kernel);
+}
+
+void GradientMap::resize(int rows, int cols)
 {
     _gradients.resize(rows);
     for (int i = 0; i < rows; ++i)
         _gradients[i].resize(cols);
 }
 
-GradientMap GradientMap::fromImage(const Image &image, const GradientKernel& kernel)
-{
-    cv::Mat grayscaleMat = image.grayscaleMatrix();
-    GradientMap map(image.grayscaleMatrix().rows, image.grayscaleMatrix().cols);
-
-    for (int row = 0; row < grayscaleMat.rows; ++row)
-        for (int col = 0; col < grayscaleMat.cols; ++col)
-            map._gradients[row][col] = gradientAt(grayscaleMat, row, col, kernel);
-
-    return map;
-}
-
-Gradient GradientMap::gradientAt(cv::Mat grayscaleMat, int row, int col, const GradientKernel &kernel)
+Gradient GradientMap::computeGradientAt(cv::Mat grayscaleMat, int row, int col, const GradientKernel &kernel)
 {
     Gradient grad;
     MaskVec masks;
@@ -32,29 +56,28 @@ Gradient GradientMap::gradientAt(cv::Mat grayscaleMat, int row, int col, const G
 
     grad.resize(maskCount);
 
-    // ToDo JRA: GradientMap::gradientAt(): Fixer une règle pour le calcul des gradients sur les bordures
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    // ToDo JRA: GradientMap::computeGradientAt(): Fixer une règle pour le calcul des gradients sur les bordures
     if (row == 0 || row == grayscaleMat.rows - 1 || col == 0 || col == grayscaleMat.cols - 1)
     {
         for (int i = 0; i < maskCount; ++i)
             grad.setValueAt(i, 0);
         return grad;
     }
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////
 
     for (int i = 0; i < maskCount; ++i)
-        grad.setValueAt(i, gradientValueAt(grayscaleMat, row, col, masks[i]));
+        grad.setValueAt(i, computeGradientValueAt(grayscaleMat, row, col, masks[i]));
 
     return grad;
 }
-double GradientMap::gradientValueAt(cv::Mat grayscaleMat, int row, int col, const Mask &mask)
+double GradientMap::computeGradientValueAt(cv::Mat grayscaleMat, int row, int col, const Mask &mask)
 {
     uchar intensity;
     double gradientValue;
 
     gradientValue = 0;
 
-    // ToDo JRA: GradientMap::gradientValueAt(): Déterminer dynamiquement les intervalles [-i,i] [-j,j]
+    // ToDo JRA: GradientMap::computeGradientValueAt(): Déterminer dynamiquement les intervalles [-i,i] [-j,j]
 
     for(int i = -1; i <= 1; ++i) // itération sur les colonnes de l'image et du masque
     {

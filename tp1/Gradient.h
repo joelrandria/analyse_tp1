@@ -11,12 +11,12 @@ private:
 
 public:
 
-    Gradient() {}
+    void resize(int size);
 
-    void resize(int dims);
+    int getMaxValueDirection() const;
 
-    double getValueAt(int pos) const { return _values[pos]; }
-    void setValueAt(int pos, double value) { _values[pos] = value; }
+    double getValueAt(int index) const { return _values[index]; }
+    void setValueAt(int index, double value) { _values[index] = value; }
 };
 
 #endif // GRADIENT_H

@@ -17,13 +17,20 @@ private:
 public:
 
     GradientMap(int rows, int cols);
+    GradientMap(const Image& image, const GradientKernel& kernel);
 
-    static GradientMap fromImage(const Image& image, const GradientKernel& kernel);
+    int width() const;
+    int height() const;
+
+    const Gradient& getGradientAt(int row, int col) const;
 
 private:
 
-    static Gradient gradientAt(cv::Mat grayscaleMat, int row, int col, const GradientKernel& kernel);
-    static double gradientValueAt(cv::Mat grayscaleMat, int row, int col, const Mask& mask);
+    void resize(int rows, int cols);
+    void buildFromImage(const Image &image, const GradientKernel &kernel);
+
+    static Gradient computeGradientAt(cv::Mat grayscaleMat, int row, int col, const GradientKernel& kernel);
+    static double computeGradientValueAt(cv::Mat grayscaleMat, int row, int col, const Mask& mask);
 
 };
 

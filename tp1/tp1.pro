@@ -11,6 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = tp1
 TEMPLATE = app
 
+QMAKE_CXXFLAGS += -std=c++11
+QMAKE_LFLAGS +=  -std=c++11
 
 SOURCES += main.cpp\
     Workspace.cpp \
@@ -20,7 +22,8 @@ SOURCES += main.cpp\
     GradientKernel.cpp \
     Gradient.cpp \
     GradientMap.cpp \
-    EdgeDetectionConfigDialog.cpp
+    EdgeDetectionConfigDialog.cpp \
+    EdgeDetectionWindow.cpp
 
 HEADERS  += \
     Workspace.h \
@@ -31,10 +34,12 @@ HEADERS  += \
     Gradient.h \
     GradientMap.h \
     Mask.h \
-    EdgeDetectionConfigDialog.h
+    EdgeDetectionConfigDialog.h \
+    EdgeDetectionWindow.h
 
 FORMS    += \
     WorkspaceWindow.ui \
-    EdgeDetectionConfigDialog.ui
+    EdgeDetectionConfigDialog.ui \
+    EdgeDetectionWindow.ui
 
 LIBS += `pkg-config opencv --libs`
