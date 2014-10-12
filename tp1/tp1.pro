@@ -16,13 +16,20 @@ SOURCES += main.cpp\
     Workspace.cpp \
     Tp1Application.cpp \
     WorkspaceWindow.cpp \
-    Image.cpp
+    Image.cpp \
+    GradientKernel.cpp \
+    Gradient.cpp \
+    GradientMap.cpp
 
 HEADERS  += \
     Workspace.h \
     Tp1Application.h \
     WorkspaceWindow.h \
-    Image.h
+    Image.h \
+    GradientKernel.h \
+    Gradient.h \
+    GradientMap.h \
+    Mask.h
 
 FORMS    += \
     WorkspaceWindow.ui

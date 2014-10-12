@@ -2,10 +2,6 @@
 
 #include <opencv2/highgui/highgui.hpp>
 
-Image::Image()
-{
-}
-
 void Image::load(const std::string &imagePath)
 {
     _matrix = cv::imread(imagePath);
