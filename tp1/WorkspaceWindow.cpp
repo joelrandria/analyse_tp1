@@ -1,5 +1,8 @@
 #include "WorkspaceWindow.h"
 #include "ui_WorkspaceWindow.h"
+#include "Tp1Application.h"
+#include "Workspace.h"
+#include "EdgeDetectionDialog.h"
 
 #include <QFileDialog>
 #include <QUrl>
@@ -7,9 +10,6 @@
 #include <opencv2/core/core.hpp>
 
 #include <iostream>
-
-#include "Tp1Application.h"
-#include "Workspace.h"
 
 WorkspaceWindow::WorkspaceWindow(Workspace* workspace, QWidget *parent) :
     QMainWindow(parent),
@@ -66,4 +66,15 @@ void WorkspaceWindow::on_actionOpenFile_triggered()
 void WorkspaceWindow::on_actionCloseFile_triggered()
 {
     close();
+}
+
+void WorkspaceWindow::on_actionEdgeDetection_triggered()
+{
+    GradientKernel gk;
+
+    EdgeDetectionDialog edd(this);
+    if (!edd.exec())
+        return;
+
+    gk = edd.getSelectedKernel();
 }

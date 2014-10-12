@@ -26,9 +26,13 @@ public:
 
 private slots:
 
+    // Menu Fichier
     void on_actionOpenFile_triggered();
     void on_actionCloseFile_triggered();
     void on_actionNewWorkspace_triggered();
+
+    // Menu Traitements
+    void on_actionEdgeDetection_triggered();
 
 private:
 

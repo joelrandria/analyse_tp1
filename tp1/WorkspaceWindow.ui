@@ -77,7 +77,14 @@
     <addaction name="separator"/>
     <addaction name="actionCloseFile"/>
    </widget>
+   <widget class="QMenu" name="menuTraitements">
+    <property name="title">
+     <string>Traitements</string>
+    </property>
+    <addaction name="actionEdgeDetection"/>
+   </widget>
    <addaction name="menuFichier"/>
+   <addaction name="menuTraitements"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpenFile">
@@ -96,6 +103,11 @@
   <action name="actionNewWorkspace">
    <property name="text">
     <string>Nouvelle fenêtre</string>
+   </property>
+  </action>
+  <action name="actionEdgeDetection">
+   <property name="text">
+    <string>Détection de contours...</string>
    </property>
   </action>
  </widget>
