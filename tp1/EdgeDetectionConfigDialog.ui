@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>EdgeDetectionDialog</class>
- <widget class="QDialog" name="EdgeDetectionDialog">
+ <class>EdgeDetectionConfigDialog</class>
+ <widget class="QDialog" name="EdgeDetectionConfigDialog">
   <property name="windowModality">
    <enum>Qt::WindowModal</enum>
   </property>
@@ -90,7 +90,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>EdgeDetectionDialog</receiver>
+   <receiver>EdgeDetectionConfigDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -106,7 +106,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>EdgeDetectionDialog</receiver>
+   <receiver>EdgeDetectionConfigDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

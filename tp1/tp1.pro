@@ -20,7 +20,7 @@ SOURCES += main.cpp\
     GradientKernel.cpp \
     Gradient.cpp \
     GradientMap.cpp \
-    EdgeDetectionDialog.cpp
+    EdgeDetectionConfigDialog.cpp
 
 HEADERS  += \
     Workspace.h \
@@ -31,10 +31,10 @@ HEADERS  += \
     Gradient.h \
     GradientMap.h \
     Mask.h \
-    EdgeDetectionDialog.h
+    EdgeDetectionConfigDialog.h
 
 FORMS    += \
     WorkspaceWindow.ui \
-    EdgeDetectionDialog.ui
+    EdgeDetectionConfigDialog.ui
 
 LIBS += `pkg-config opencv --libs`
