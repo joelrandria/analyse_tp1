@@ -13,6 +13,10 @@ class EdgeDetectionConfigDialog : public QDialog
 {
     Q_OBJECT
 
+private:
+
+    Ui::EdgeDetectionConfigDialog *ui;
+
 public:
 
     explicit EdgeDetectionConfigDialog(QWidget *parent = 0);
@@ -20,9 +24,13 @@ public:
 
     GradientKernel getSelectedKernel() const;
 
-private:
+    int hysterisisLowThreshold() const;
+    int hysterisisHighThreshold() const;
 
-    Ui::EdgeDetectionConfigDialog *ui;
+private slots:
+
+    void on_highThresholdLineEdit_valueChanged(int arg1);
+    void on_lowThresholdLineEdit_valueChanged(int arg1);
 };
 
 #endif // EDGEDETECTIONConfigDIALOG_H

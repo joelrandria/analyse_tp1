@@ -16,12 +16,6 @@ GradientKernel EdgeDetectionConfigDialog::getSelectedKernel() const
 {
     GradientKernel gk;
 
-//    if (ui->maskTypeComboBox->currentText().contains("Prewitt"))
-//    {
-//        if (ui->filteringTypeComboBox->currentText().contains("Bi-directionnel"))
-//            gk = GradientKernel::Prewitt2D();
-//    }
-
     if (ui->filteringTypeComboBox->currentText().contains("Bi-directionnel"))
     {
         if(ui->maskTypeComboBox->currentText().contains("Prewitt"))
@@ -36,7 +30,7 @@ GradientKernel EdgeDetectionConfigDialog::getSelectedKernel() const
         {
             gk = GradientKernel::Kirsch2D();
         }
-     }
+    }
     else if (ui->filteringTypeComboBox->currentText().contains("Multi-directionnel"))
     {
         if(ui->maskTypeComboBox->currentText().contains("Prewitt"))
@@ -51,7 +45,27 @@ GradientKernel EdgeDetectionConfigDialog::getSelectedKernel() const
         {
             gk = GradientKernel::Kirsch4D();
         }
-     }
+    }
 
     return gk;
+}
+
+int EdgeDetectionConfigDialog::hysterisisLowThreshold() const
+{
+    return ui->lowThresholdLineEdit->value();
+}
+int EdgeDetectionConfigDialog::hysterisisHighThreshold() const
+{
+    return ui->highThresholdLineEdit->value();
+}
+
+void EdgeDetectionConfigDialog::on_highThresholdLineEdit_valueChanged(int arg1)
+{
+    if (ui->lowThresholdSlider->value() > arg1)
+        ui->lowThresholdSlider->setValue(arg1);
+}
+void EdgeDetectionConfigDialog::on_lowThresholdLineEdit_valueChanged(int arg1)
+{
+    if (ui->highThresholdSlider->value() < arg1)
+        ui->highThresholdSlider->setValue(arg1);
 }
