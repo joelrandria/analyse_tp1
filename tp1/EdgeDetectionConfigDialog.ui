@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>337</width>
-    <height>131</height>
+    <width>345</width>
+    <height>255</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,65 +25,110 @@
   <property name="modal">
    <bool>true</bool>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <property name="sizeConstraint">
-    <enum>QLayout::SetFixedSize</enum>
-   </property>
+  <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0">
-    <layout class="QFormLayout" name="formLayout">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetDefaultConstraint</enum>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Masque</string>
      </property>
-     <item row="0" column="0">
-      <widget class="QLabel" name="maskTypeLabel">
-       <property name="text">
-        <string>Masque à appliquer :</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QComboBox" name="maskTypeComboBox">
-       <item>
-        <property name="text">
-         <string>Prewitt</string>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <layout class="QFormLayout" name="formLayout">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
         </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Sobel</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Kirsch</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="filteringTypeLabel">
-       <property name="text">
-        <string>Filtrage :</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QComboBox" name="filteringTypeComboBox">
-       <item>
-        <property name="text">
-         <string>Bi-directionnel</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Multi-directionnel</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-    </layout>
+        <item row="0" column="0">
+         <widget class="QLabel" name="maskTypeLabel">
+          <property name="text">
+           <string>Masque à appliquer :</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="maskTypeComboBox">
+          <item>
+           <property name="text">
+            <string>Prewitt</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Sobel</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Kirsch</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="filteringTypeLabel">
+          <property name="text">
+           <string>Filtrage :</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="filteringTypeComboBox">
+          <item>
+           <property name="text">
+            <string>Bi-directionnel</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Multi-directionnel</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+     <zorder></zorder>
+     <zorder></zorder>
+    </widget>
    </item>
    <item row="1" column="0">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Seuillage</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Seuil haut :</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QSlider" name="horizontalSlider">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Seuil bas :</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSlider" name="horizontalSlider_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
