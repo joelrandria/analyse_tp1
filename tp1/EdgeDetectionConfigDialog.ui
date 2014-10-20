@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>345</width>
-    <height>255</height>
+    <height>299</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -87,14 +87,12 @@
        </layout>
       </item>
      </layout>
-     <zorder></zorder>
-     <zorder></zorder>
     </widget>
    </item>
    <item row="1" column="0">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
-      <string>Seuillage</string>
+      <string>Seuillage par hystérisis</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
@@ -105,9 +103,22 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QSlider" name="horizontalSlider">
+       <widget class="QSlider" name="highThresholdSlider">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::NoTicks</enum>
+        </property>
+        <property name="tickInterval">
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QSpinBox" name="highThresholdLineEdit">
+        <property name="suffix">
+         <string>%</string>
         </property>
        </widget>
       </item>
@@ -119,9 +130,22 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QSlider" name="horizontalSlider_2">
+       <widget class="QSlider" name="lowThresholdSlider">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::NoTicks</enum>
+        </property>
+        <property name="tickInterval">
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QSpinBox" name="lowThresholdLineEdit">
+        <property name="suffix">
+         <string>%</string>
         </property>
        </widget>
       </item>
@@ -171,6 +195,38 @@
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>highThresholdSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>highThresholdLineEdit</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>183</x>
+     <y>182</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>296</x>
+     <y>182</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lowThresholdSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>lowThresholdLineEdit</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>183</x>
+     <y>224</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>296</x>
+     <y>224</y>
     </hint>
    </hints>
   </connection>

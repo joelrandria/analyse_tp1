@@ -22,16 +22,25 @@ private:
     const Image& _image;
     const GradientKernel& _kernel;
 
-    /*const*/ GradientMapMax _gradientMapMax;
+    GradientMapMax _gradientMapMax;
+
+    int _hysterisisLowThreshold;
+    int _hysterisisHighThreshold;
 
 public:
 
     EdgeDetectionWindow(const Image& image, const GradientKernel& kernel, QWidget *parent = 0);
     ~EdgeDetectionWindow();
 
+    void setHysterisisThresholds(int low, int high)
+    {
+        _hysterisisLowThreshold = low;
+        _hysterisisHighThreshold = high;
+    }
+
 private:
 
-    void updateView();// const;
+    void updateView();
 };
 
 #endif // EDGEDETECTIONWINDOW_H

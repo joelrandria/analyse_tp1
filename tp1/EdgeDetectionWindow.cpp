@@ -24,7 +24,7 @@ EdgeDetectionWindow::~EdgeDetectionWindow()
     delete ui;
 }
 
-void EdgeDetectionWindow::updateView()// const
+void EdgeDetectionWindow::updateView()
 {
     int mapWidth = _gradientMapMax.width();
     int mapHeight = _gradientMapMax.height();
