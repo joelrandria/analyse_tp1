@@ -28,8 +28,8 @@ void EdgeDetectionWindow::updateView()// const
 {
     int mapWidth = _gradientMapMax.width();
     int mapHeight = _gradientMapMax.height();
-    _gradientMapMax.seuillageLocale();
-    _gradientMapMax.seuillageFixe(25);
+    //_gradientMapMax.seuillageLocale();
+    _gradientMapMax.seuillageHyest(40 ,30);
     //_gradientMapMax.sauveGradient("/home/meguehout/AnalyseTp1/analyse_tp1/tp1/Test2.txt");
 
     Composant composantGradient;
