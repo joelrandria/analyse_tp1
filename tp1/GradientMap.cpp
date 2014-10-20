@@ -4,35 +4,38 @@
 
 GradientMap::GradientMap(int rows, int cols)
 {
-    resize(rows, cols);
+    resize(rows, cols); // crée gradientMap vide juste reservation
 }
 GradientMap::GradientMap(const Image &image, const GradientKernel &kernel)
 {
-    buildFromImage(image, kernel);
+    buildFromImage(image, kernel);//creé un gradientMap avec les valeur du grand en
+                                  //appliquant le kernel sur l'image
 }
 
 int GradientMap::width() const
 {
     if (height() > 0)
-        return _gradients[0].size();
+        return _gradients[0].size();//nbr colone du tableau du gradient
     return 0;
 }
 int GradientMap::height() const
 {
-    return _gradients.size();
+    return _gradients.size();//nbt ligne du tableau du gradient
 }
 
 const Gradient &GradientMap::getGradientAt(int row, int col) const
 {
-    return _gradients[row][col];
+    return _gradients[row][col];//return un vecteur de gradient d'une position de gradienMap
 }
 
+
+/**************PRIVET*****************************/
 void GradientMap::buildFromImage(const Image &image, const GradientKernel& kernel)
 {
     cv::Mat grayscaleMat = image.grayscaleMatrix();
 
     resize(grayscaleMat.rows, grayscaleMat.cols);
-
+//ICI le balyage de tout l'image pr le calcul du gradient
     for (int row = 0; row < grayscaleMat.rows; ++row)
         for (int col = 0; col < grayscaleMat.cols; ++col)
             _gradients[row][col] = computeGradientAt(grayscaleMat, row, col, kernel);
@@ -40,6 +43,9 @@ void GradientMap::buildFromImage(const Image &image, const GradientKernel& kerne
 
 void GradientMap::resize(int rows, int cols)
 {
+    _rows = rows;/**/
+    _cols = cols;/**/
+
     _gradients.resize(rows);
     for (int i = 0; i < rows; ++i)
         _gradients[i].resize(cols);
@@ -51,24 +57,24 @@ Gradient GradientMap::computeGradientAt(cv::Mat grayscaleMat, int row, int col, 
     MaskVec masks;
     int maskCount;
 
-    masks = kernel.masks();
-    maskCount = masks.size();
+    masks = kernel.masks();//récuperation du masque dans diffirente direction
+    maskCount = masks.size();//savoirs combien de direction ya 2D ou 4D
 
-    grad.resize(maskCount);
+    grad.resize(maskCount);//soit un vecteurgradient de 2D ou 4D
 
     // ToDo JRA: GradientMap::computeGradientAt(): Fixer une règle pour le calcul des gradients sur les bordures
     if (row == 0 || row == grayscaleMat.rows - 1 || col == 0 || col == grayscaleMat.cols - 1)
     {
         for (int i = 0; i < maskCount; ++i)
-            grad.setValueAt(i, 0);
+            grad.setValueAt(i, 0);//MAIS ICI ELLE RENVOI 0 donc les borne noire
         return grad;
     }
     //////////////////////////////////////////////////////////////////////////////////////////
 
-    for (int i = 0; i < maskCount; ++i)
+    for (int i = 0; i < maskCount; ++i) //on fera le calcul et chaque fois avec un masque diffirent qui permet de gere le balyage 2d comme 4D
         grad.setValueAt(i, computeGradientValueAt(grayscaleMat, row, col, masks[i]));
-
-    return grad;
+        //valeur res du maks i met dans la position i
+    return grad;//maskCount = 2 => grad[2] tq: grad[0]=Dx et grad[2]=Dy
 }
 double GradientMap::computeGradientValueAt(cv::Mat grayscaleMat, int row, int col, const Mask &mask)
 {

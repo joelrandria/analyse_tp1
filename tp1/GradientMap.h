@@ -10,12 +10,17 @@
 
 class GradientMap
 {
-private:
+protected:
 
     std::vector<std::vector<Gradient> > _gradients;
 
-public:
+    int _rows;/**/
+    int _cols;/**/
 
+public:
+//    pr les création de notre tableau gradient soit on donne "rows" "cols"
+//    et ça crée un tableau de gradient vide
+//    OU l'image' est le 'kernel' est ça crée un tab gradient avec valeur
     GradientMap(int rows, int cols);
     GradientMap(const Image& image, const GradientKernel& kernel);
 
@@ -24,9 +29,10 @@ public:
 
     const Gradient& getGradientAt(int row, int col) const;
 
+
 private:
 
-    void resize(int rows, int cols);
+    void resize(int rows, int cols);//resrvation d'espace
     void buildFromImage(const Image &image, const GradientKernel &kernel);
 
     static Gradient computeGradientAt(cv::Mat grayscaleMat, int row, int col, const GradientKernel& kernel);

@@ -48,6 +48,16 @@
          <string>Prewitt</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Sobel</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Kirsch</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item row="1" column="0">

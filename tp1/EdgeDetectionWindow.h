@@ -5,7 +5,7 @@
 
 #include "Image.h"
 #include "GradientKernel.h"
-#include "GradientMap.h"
+#include "GradientMapMax.h"
 
 namespace Ui {
 class EdgeDetectionWindow;
@@ -22,7 +22,7 @@ private:
     const Image& _image;
     const GradientKernel& _kernel;
 
-    const GradientMap _gradientMap;
+    /*const*/ GradientMapMax _gradientMapMax;
 
 public:
 
@@ -31,7 +31,7 @@ public:
 
 private:
 
-    void updateView() const;
+    void updateView();// const;
 };
 
 #endif // EDGEDETECTIONWINDOW_H

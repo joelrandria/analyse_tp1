@@ -1,6 +1,9 @@
 #include "EdgeDetectionWindow.h"
 #include "ui_EdgeDetectionWindow.h"
 
+#include <stdlib.h>
+#include <stdio.h>
+
 #include <cmath>
 
 EdgeDetectionWindow::EdgeDetectionWindow(const Image& image,
@@ -10,7 +13,7 @@ EdgeDetectionWindow::EdgeDetectionWindow(const Image& image,
     ui(new Ui::EdgeDetectionWindow),
     _image(image),
     _kernel(kernel),
-    _gradientMap(_image, _kernel)
+    _gradientMapMax(_image, _kernel, true)//true pr dir normalise
 {
     ui->setupUi(this);
 
@@ -21,11 +24,15 @@ EdgeDetectionWindow::~EdgeDetectionWindow()
     delete ui;
 }
 
-void EdgeDetectionWindow::updateView() const
+void EdgeDetectionWindow::updateView()// const
 {
-    int mapWidth = _gradientMap.width();
-    int mapHeight = _gradientMap.height();
-    float normalizationFactor = _kernel.getNormalizationFactor();
+    int mapWidth = _gradientMapMax.width();
+    int mapHeight = _gradientMapMax.height();
+    _gradientMapMax.seuillageLocale();
+    _gradientMapMax.seuillageFixe(25);
+    //_gradientMapMax.sauveGradient("/home/meguehout/AnalyseTp1/analyse_tp1/tp1/Test2.txt");
+
+    Composant composantGradient;
 
     QImage* pImage = new QImage(mapWidth, mapHeight, QImage::Format_RGB888);
 
@@ -33,24 +40,32 @@ void EdgeDetectionWindow::updateView() const
     {
         for (int col = 0; col < mapWidth; ++col)
         {
-            Gradient gradient = _gradientMap.getGradientAt(row, col);
-
-            int maxValueIndex = gradient.getMaxValueDirection();
-            int normalizedMaxValue = abs(gradient.getValueAt(maxValueIndex)) * normalizationFactor;
+            composantGradient = _gradientMapMax.getComposantAt(row, col);
 
             uint pixelColor;
-            switch (maxValueIndex)
+            switch (composantGradient.dir)
             {
             case 0: // Direction X => Rouge
 
-                pixelColor = qRgb(normalizedMaxValue, 0, 0);
+                pixelColor = qRgb(composantGradient.valS, 0, 0);
                 break;
 
             case 1: // Direction Y => Vert
 
-                pixelColor = qRgb(0, normalizedMaxValue, 0);
+                pixelColor = qRgb(0, composantGradient.valS, 0);
                 break;
-            }
+             /********4D**************/
+            case 2: // Direction YX => Bleu
+
+                pixelColor = qRgb(0, 0,composantGradient.valS);
+                break;
+
+            case 3: // Direction X-Y => yellow
+
+                pixelColor = qRgb(composantGradient.valS, composantGradient.valS, 0);
+                break;
+
+            }//AJOUTER DES TESTE PR LES AUTRE DIRECTION
 
             pImage->setPixel(col, row, pixelColor);
         }

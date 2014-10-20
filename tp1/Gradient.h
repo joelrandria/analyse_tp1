@@ -11,7 +11,7 @@ private:
 
 public:
 
-    void resize(int size);
+    void resize(int size);//initialisation de la taille du gradient 2D ou 4D
 
     int getMaxValueDirection() const;
 
