@@ -29,14 +29,12 @@ private:
 
 public:
 
-    EdgeDetectionWindow(const Image& image, const GradientKernel& kernel, QWidget *parent = 0);
+    EdgeDetectionWindow(const Image& image,
+                        const GradientKernel& kernel,
+                        int hysterisisLowThreshold,
+                        int hysterisisHighThreshold,
+                        QWidget *parent = 0);
     ~EdgeDetectionWindow();
-
-    void setHysterisisThresholds(int low, int high)
-    {
-        _hysterisisLowThreshold = low;
-        _hysterisisHighThreshold = high;
-    }
 
 private:
 

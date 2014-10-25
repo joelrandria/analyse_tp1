@@ -75,7 +75,9 @@ void WorkspaceWindow::on_actionEdgeDetection_triggered()
     if (!configDialog.exec())
         return;
 
-    EdgeDetectionWindow* detectionWindow = new EdgeDetectionWindow(_workspace->image(), configDialog.getSelectedKernel());
-    detectionWindow->setHysterisisThresholds(configDialog.hysterisisLowThreshold(), configDialog.hysterisisHighThreshold());
+    EdgeDetectionWindow* detectionWindow = new EdgeDetectionWindow(_workspace->image(),
+                                                                   configDialog.getSelectedKernel(),
+                                                                   configDialog.hysterisisLowThreshold(),
+                                                                   configDialog.hysterisisHighThreshold());
     detectionWindow->show();
 }

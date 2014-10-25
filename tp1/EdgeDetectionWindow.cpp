@@ -8,12 +8,17 @@
 
 EdgeDetectionWindow::EdgeDetectionWindow(const Image& image,
                                          const GradientKernel& kernel,
+                                         int hysterisisLowThreshold,
+                                         int hysterisisHighThreshold,
                                          QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::EdgeDetectionWindow),
     _image(image),
     _kernel(kernel),
-    _gradientMapMax(_image, _kernel, true)//true pr dir normalise
+    _gradientMapMax(_image, _kernel, true),//true pr dir normalise
+    _hysterisisLowThreshold((hysterisisLowThreshold*255)/100),
+    _hysterisisHighThreshold((hysterisisHighThreshold*255)/100)
+
 {
     ui->setupUi(this);
 
@@ -28,10 +33,10 @@ void EdgeDetectionWindow::updateView()
 {
     int mapWidth = _gradientMapMax.width();
     int mapHeight = _gradientMapMax.height();
-    //_gradientMapMax.seuillageLocale();
-    _gradientMapMax.seuillageHyest(40 ,30);
-    //_gradientMapMax.sauveGradient("/home/meguehout/AnalyseTp1/analyse_tp1/tp1/Test2.txt");
 
+    _gradientMapMax.seuillageHyest(_hysterisisHighThreshold,_hysterisisLowThreshold);
+    //_gradientMapMax.sauveGradient("/home/meguehout/AnalyseTp1/analyse_tp1/tp1/Test2.txt");
+    _gradientMapMax.affinage();
     Composant composantGradient;
 
     QImage* pImage = new QImage(mapWidth, mapHeight, QImage::Format_RGB888);

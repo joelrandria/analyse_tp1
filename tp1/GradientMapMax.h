@@ -23,20 +23,23 @@ public:
 
     void seuillageHyest (float seuilH, float seuilBas); //float pr quand puis utilise par ex: 100.56 dans une interval 0-255
 
+    void affinage ();
 
-    //void seuillageLocale();
+
 
    void sauveGradient(std::string chemainDeSauve ) const;
 
 private:
     void resize();
-//    float computeSeuilBernsen(int x, int y);
-//    float computeSeuilSauvola(int x, int y);
+
     void seuillageBas(float seuilB);
     bool testeVoisin(int x, int y);
 
-    float moyFenetre(int x, int y);
-    float ecartType(int x, int y, float moy);
+    void affinageX();
+    void affinageY();
+    void affinageYX();
+    void affinageX_Y();
+
 };
 
 #endif // GRADIENTMAPMAX_H
