@@ -35,8 +35,8 @@ void EdgeDetectionWindow::updateView()
     int mapHeight = _gradientMapMax.height();
 
     _gradientMapMax.seuillageHyest(_hysterisisHighThreshold,_hysterisisLowThreshold);
-    //_gradientMapMax.sauveGradient("/home/meguehout/AnalyseTp1/analyse_tp1/tp1/Test2.txt");
     _gradientMapMax.affinage();
+
     Composant composantGradient;
 
     QImage* pImage = new QImage(mapWidth, mapHeight, QImage::Format_RGB888);
@@ -47,30 +47,32 @@ void EdgeDetectionWindow::updateView()
         {
             composantGradient = _gradientMapMax.getComposantAt(row, col);
 
-            uint pixelColor;
-            switch (composantGradient.dir)
+            uint pixelColor = 0;
+            if (composantGradient.valS == 255)
             {
-            case 0: // Direction X => Rouge
+                switch (composantGradient.dir)
+                {
+                case 0: // Direction X => Rouge
 
-                pixelColor = qRgb(composantGradient.valS, 0, 0);
-                break;
+                    pixelColor = qRgb(composantGradient.val, 0, 0);
+                    break;
 
-            case 1: // Direction Y => Vert
+                case 1: // Direction Y => Vert
 
-                pixelColor = qRgb(0, composantGradient.valS, 0);
-                break;
-             /********4D**************/
-            case 2: // Direction YX => Bleu
+                    pixelColor = qRgb(0, composantGradient.val, 0);
+                    break;
 
-                pixelColor = qRgb(0, 0,composantGradient.valS);
-                break;
+                case 2: // Direction YX => Bleu
 
-            case 3: // Direction X-Y => yellow
+                    pixelColor = qRgb(0, 0,composantGradient.val);
+                    break;
 
-                pixelColor = qRgb(composantGradient.valS, composantGradient.valS, 0);
-                break;
+                case 3: // Direction X-Y => Jaune
 
-            }//AJOUTER DES TESTE PR LES AUTRE DIRECTION
+                    pixelColor = qRgb(composantGradient.val, composantGradient.val, 0);
+                    break;
+                }
+            }
 
             pImage->setPixel(col, row, pixelColor);
         }
