@@ -230,5 +230,37 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>lowThresholdLineEdit</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>lowThresholdSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>296</x>
+     <y>224</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>183</x>
+     <y>224</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>highThresholdLineEdit</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>highThresholdSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>296</x>
+     <y>182</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>183</x>
+     <y>182</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
 </ui>

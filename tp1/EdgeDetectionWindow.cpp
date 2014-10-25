@@ -80,25 +80,11 @@ void EdgeDetectionWindow::updateView()
 }
 
 void EdgeDetectionWindow::on_actionEnregistrer_triggered()
-{/*
-    QFileDialog fd(this, tr("Enregistrer une image"));
-    fd.setFileMode(QFileDialog::AnyFile);
-    fd.setNameFilter(tr("Fichiers images (*.png *.jpg *.bmp)"));
-
-    if (fd.exec())
-    {
-        QString filePath = fd.selectedFiles().first();
-//        _workspace->loadImage(filePath.toUtf8().data());
-
-//        updateImageView();
-//        setWindowTitle(QUrl(filePath).fileName());
-    }*/
-
-
+{
     QString savePath = QFileDialog::getSaveFileName(this,
-                                                    "Sauvegarde",
+                                                    "Enregistrer sous",
                                                     "",
                                                     tr("Fichiers images (*.png *.jpg *.bmp)"));
-
-    ui->pixmapLabel->pixmap()->save(savePath);
+    if (!savePath.isEmpty())
+        ui->pixmapLabel->pixmap()->save(savePath);
 }

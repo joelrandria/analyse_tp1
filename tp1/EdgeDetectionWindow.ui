@@ -70,7 +70,7 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionEnregistrer">
    <property name="text">
-    <string>Enregistrer...</string>
+    <string>Enregistrer sous...</string>
    </property>
   </action>
  </widget>
