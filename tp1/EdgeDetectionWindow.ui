@@ -59,8 +59,20 @@
      <height>25</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFichier">
+    <property name="title">
+     <string>Fichier</string>
+    </property>
+    <addaction name="actionEnregistrer"/>
+   </widget>
+   <addaction name="menuFichier"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionEnregistrer">
+   <property name="text">
+    <string>Enregistrer...</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

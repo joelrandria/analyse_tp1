@@ -36,6 +36,9 @@ public:
                         QWidget *parent = 0);
     ~EdgeDetectionWindow();
 
+private slots:
+    void on_actionEnregistrer_triggered();
+
 private:
 
     void updateView();
