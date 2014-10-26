@@ -28,8 +28,6 @@ EdgeDetectionWindow::EdgeDetectionWindow(const Image& image,
 
     ConnectedComponent::fromGradientMapMax(_gradientMapMax, _connectedComponents);
 
-    qDebug() << "Nombre de composantes connexes trouvées: " << _connectedComponents.size();
-
     updateView();
 }
 EdgeDetectionWindow::~EdgeDetectionWindow()
