@@ -2,9 +2,9 @@
 
 #include <cmath>
 
-void Gradient::resize(int size)
+Gradient::Gradient(int size)
+    :_values(size)
 {
-    _values.resize(size);
 }
 
 int Gradient::getMaxValueDirection() const

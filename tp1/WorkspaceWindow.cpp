@@ -7,6 +7,8 @@
 
 #include <QFileDialog>
 #include <QUrl>
+#include <QTime>
+#include <QDebug>
 
 #include <opencv2/core/core.hpp>
 
@@ -78,6 +80,8 @@ void WorkspaceWindow::on_actionEdgeDetection_triggered()
     EdgeDetectionWindow* detectionWindow = new EdgeDetectionWindow(_workspace->image(),
                                                                    configDialog.getSelectedKernel(),
                                                                    configDialog.hysterisisLowThreshold(),
-                                                                   configDialog.hysterisisHighThreshold());
+                                                                   configDialog.hysterisisHighThreshold(),
+                                                                   this);
+
     detectionWindow->show();
 }

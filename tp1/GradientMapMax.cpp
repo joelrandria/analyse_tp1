@@ -1,4 +1,8 @@
 ﻿#include "GradientMapMax.h"
+
+#include <QTime>
+#include <QDebug>
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <fstream>
@@ -7,11 +11,16 @@ using namespace std;
 
 GradientMapMax::GradientMapMax(const Image &image, const GradientKernel &kernel, const bool normaliser) : GradientMap(image,kernel)
 {
+    ///////////////////////////////////////////////////////////////////
+    QTime timer;
+    timer.start();
+    ///////////////////////////////////////////////////////////////////
+
     float normalizationFactor = kernel.getNormalizationFactor();
     int maxValueIndex;
     float MaxValue;
 
-    resize();//initialisation de _maxGradientMap
+    resize();
 
     for(int row=0; row < _rows; row++)
     {
@@ -28,6 +37,10 @@ GradientMapMax::GradientMapMax(const Image &image, const GradientKernel &kernel,
             _maxGradients[row][col].dir = maxValueIndex;
         }
     }
+
+    ///////////////////////////////////////////////////////////////////
+    qDebug() << "Temps pour construire la GradientMapMax: " << timer.elapsed();
+    ///////////////////////////////////////////////////////////////////
 }
 
 void GradientMapMax::seuillageHyest(float seuilH, float seuilBas)
@@ -36,9 +49,9 @@ void GradientMapMax::seuillageHyest(float seuilH, float seuilBas)
     {
         for(int col=0; col < _cols; col++)
         {
-          if(_maxGradients[row][col].val < seuilH)//ou egale
-              _maxGradients[row][col].valS = 0;
-          else _maxGradients[row][col].valS = 255;
+            if(_maxGradients[row][col].val < seuilH)//ou egale
+                _maxGradients[row][col].valS = 0;
+            else _maxGradients[row][col].valS = 255;
         }
     }
 
@@ -59,8 +72,6 @@ const Composant GradientMapMax::getComposantAt(int row, int col) const
     return _maxGradients[row][col];
 }
 
-/***********PRIVATE**************/
-
 void GradientMapMax::affinageX()
 {
     for (int row = 0; row < _rows; row++)
@@ -69,15 +80,14 @@ void GradientMapMax::affinageX()
         {
             if ((_maxGradients[row][col].valS == 255) && (_maxGradients[row][col].dir == 0))
             {
-                if((_maxGradients[row][col].dir == _maxGradients[row][col-1].dir) && (_maxGradients[row][col].val > _maxGradients[row][col-1].val))
+                if(/*(_maxGradients[row][col].dir == _maxGradients[row][col-1].dir) && */(_maxGradients[row][col].val > _maxGradients[row][col-1].val))
                 {
                     _maxGradients[row][col-1].valS = 0;
                 }
-                if((_maxGradients[row][col].dir == _maxGradients[row][col+1].dir) && (_maxGradients[row][col].val > _maxGradients[row][col+1].val))
+                if(/*(_maxGradients[row][col].dir == _maxGradients[row][col+1].dir) && */(_maxGradients[row][col].val > _maxGradients[row][col+1].val))
                 {
                     _maxGradients[row][col+1].valS = 0;
                 }
-
             }
         }
     }
@@ -91,11 +101,11 @@ void GradientMapMax::affinageY()
         {
             if ((_maxGradients[row][col].valS == 255) && (_maxGradients[row][col].dir == 1))
             {
-                if((_maxGradients[row][col].dir == _maxGradients[row-1][col].dir) && (_maxGradients[row][col].val > _maxGradients[row-1][col].val))
+                if(/*(_maxGradients[row][col].dir == _maxGradients[row-1][col].dir) && */(_maxGradients[row][col].val > _maxGradients[row-1][col].val))
                 {
                     _maxGradients[row-1][col].valS = 0;
                 }
-                if((_maxGradients[row][col].dir == _maxGradients[row+1][col].dir) && (_maxGradients[row][col].val > _maxGradients[row+1][col].val))
+                if(/*(_maxGradients[row][col].dir == _maxGradients[row+1][col].dir) && */(_maxGradients[row][col].val > _maxGradients[row+1][col].val))
                 {
                     _maxGradients[row+1][col].valS = 0;
                 }
@@ -113,11 +123,11 @@ void GradientMapMax::affinageYX()
         {
             if ((_maxGradients[row][col].valS == 255) && (_maxGradients[row][col].dir == 2))
             {
-                if((_maxGradients[row][col].dir == _maxGradients[row+1][col-1].dir) && (_maxGradients[row][col].val > _maxGradients[row+1][col-1].val))
+                if(/*(_maxGradients[row][col].dir == _maxGradients[row+1][col-1].dir) && */(_maxGradients[row][col].val > _maxGradients[row+1][col-1].val))
                 {
                     _maxGradients[row+1][col-1].valS = 0;
                 }
-                if((_maxGradients[row][col].dir == _maxGradients[row-1][col+1].dir) && (_maxGradients[row][col].val > _maxGradients[row-1][col+1].val))
+                if(/*(_maxGradients[row][col].dir == _maxGradients[row-1][col+1].dir) && */(_maxGradients[row][col].val > _maxGradients[row-1][col+1].val))
                 {
                     _maxGradients[row-1][col+1].valS = 0;
                 }
@@ -135,11 +145,11 @@ void GradientMapMax::affinageX_Y()
         {
             if ((_maxGradients[row][col].valS == 255) && (_maxGradients[row][col].dir == 3))
             {
-                if((_maxGradients[row][col].dir == _maxGradients[row-1][col-1].dir) && (_maxGradients[row][col].val > _maxGradients[row-1][col-1].val))
+                if(/*(_maxGradients[row][col].dir == _maxGradients[row-1][col-1].dir) && */(_maxGradients[row][col].val > _maxGradients[row-1][col-1].val))
                 {
                     _maxGradients[row-1][col-1].valS = 0;
                 }
-                if((_maxGradients[row][col].dir == _maxGradients[row+1][col+1].dir) && (_maxGradients[row][col].val > _maxGradients[row+1][col+1].val))
+                if(/*(_maxGradients[row][col].dir == _maxGradients[row+1][col+1].dir) && */(_maxGradients[row][col].val > _maxGradients[row+1][col+1].val))
                 {
                     _maxGradients[row+1][col+1].valS = 0;
                 }
@@ -158,15 +168,14 @@ void GradientMapMax::resize()
 
 bool GradientMapMax::testeVoisin(int x, int y)
 {
-//   bool res = false;
-        for (int i= x-1; i <= x+1; i++)
+    for (int i= x-1; i <= x+1; i++)
+    {
+        for(int j=y-1; j <= y+1; j++)
         {
-            for(int j=y-1; j <= y+1; j++)
-            {
-                if(_maxGradients[i][j].valS == 255) return true;
-            }
+            if(_maxGradients[i][j].valS == 255) return true;
         }
-  return false;
+    }
+    return false;
 }
 
 void GradientMapMax::seuillageBas(float seuilB)
@@ -175,13 +184,13 @@ void GradientMapMax::seuillageBas(float seuilB)
     {
         for(int col=0; col < _cols; col++)
         {
-          if(_maxGradients[row][col].val > seuilB)//ou egale
-              if(testeVoisin(row, col) == true)
-                 _maxGradients[row][col].valS = 255;
+            if(_maxGradients[row][col].val > seuilB)//ou egale
+                if(testeVoisin(row, col) == true)
+                    _maxGradients[row][col].valS = 255;
         }
     }
 }
-/*****JUST FOR TEST**********/
+
 void GradientMapMax::sauveGradient(string chemainDeSauve ) const
 {
     ofstream newMap(chemainDeSauve.c_str());
@@ -194,11 +203,11 @@ void GradientMapMax::sauveGradient(string chemainDeSauve ) const
             {
                 newMap << _maxGradients[i][j].valS << " ";
             }
-         newMap << endl;
-       }
+            newMap << endl;
+        }
 
 
     }else printf("ERREUR: Impossible d'ouvrir le fichier3 \n");
 
-   newMap.close();
+    newMap.close();
 }

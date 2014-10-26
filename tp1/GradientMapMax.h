@@ -3,31 +3,31 @@
 #include "GradientMap.h"
 
 
-typedef struct{
+typedef struct
+{
     float valS;
-    float val; //j'ai utilise un float pour garder la diffirence apret normalisation
+    float val;
     int dir;
-
 }Composant;
 
 class GradientMapMax : public GradientMap
 {
 private:
 
-    std::vector<std::vector<Composant> > _maxGradients;//int le abs(composant) max du gradient
+    std::vector<std::vector<Composant> > _maxGradients;
 
 public:
     GradientMapMax(const Image& image, const GradientKernel& kernel, const bool normaliser=false);
 
     const Composant getComposantAt(int row, int col) const;
 
-    void seuillageHyest (float seuilH, float seuilBas); //float pr quand puis utilise par ex: 100.56 dans une interval 0-255
+    void seuillageHyest (float seuilH, float seuilBas);
 
     void affinage ();
 
 
 
-   void sauveGradient(std::string chemainDeSauve ) const;
+    void sauveGradient(std::string chemainDeSauve ) const;
 
 private:
     void resize();

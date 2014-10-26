@@ -1,9 +1,12 @@
 #include "EdgeDetectionWindow.h"
 #include "ui_EdgeDetectionWindow.h"
+
 #include <QFileDialog>
+#include <QTime>
+#include <QDebug>
+
 #include <stdlib.h>
 #include <stdio.h>
-
 #include <cmath>
 
 EdgeDetectionWindow::EdgeDetectionWindow(const Image& image,
@@ -15,10 +18,9 @@ EdgeDetectionWindow::EdgeDetectionWindow(const Image& image,
     ui(new Ui::EdgeDetectionWindow),
     _image(image),
     _kernel(kernel),
-    _gradientMapMax(_image, _kernel, true),//true pr dir normalise
+    _gradientMapMax(_image, _kernel, true),
     _hysterisisLowThreshold((hysterisisLowThreshold*255)/100),
     _hysterisisHighThreshold((hysterisisHighThreshold*255)/100)
-
 {
     ui->setupUi(this);
 
@@ -54,22 +56,22 @@ void EdgeDetectionWindow::updateView()
                 {
                 case 0: // Direction X => Rouge
 
-                    pixelColor = qRgb(composantGradient.val, 0, 0);
+                    pixelColor = qRgb(composantGradient.valS, 0, 0);
                     break;
 
                 case 1: // Direction Y => Vert
 
-                    pixelColor = qRgb(0, composantGradient.val, 0);
+                    pixelColor = qRgb(0, composantGradient.valS, 0);
                     break;
 
                 case 2: // Direction YX => Bleu
 
-                    pixelColor = qRgb(0, 0,composantGradient.val);
+                    pixelColor = qRgb(0, 0,composantGradient.valS);
                     break;
 
                 case 3: // Direction X-Y => Jaune
 
-                    pixelColor = qRgb(composantGradient.val, composantGradient.val, 0);
+                    pixelColor = qRgb(composantGradient.valS, composantGradient.valS, 0);
                     break;
                 }
             }
