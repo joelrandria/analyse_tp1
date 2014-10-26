@@ -8,7 +8,7 @@ public:
     int dir;
     float val;
     float valS;
-
+    bool end = false;
     int connectedComponentId = -1;
 
 public:

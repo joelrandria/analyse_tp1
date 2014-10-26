@@ -119,6 +119,23 @@ void GradientMapMax::Bresenham(int row1,int col1,int row2,int col2)
     }
 }
 
+void GradientMapMax::fermetureSimple()
+{
+    for (int row = 1; row < _rows-1; row++)
+    {
+        for(int col = 1; col < _cols-1; col++ )
+        {
+            if(_maxGradients[row][col].valS == 0)
+            {
+                if (extremites(row, col) == true)
+                {
+                    if (!connexe(row, col))
+                        _maxGradients[row][col].valS = 255;
+                }
+            }
+        }
+    }
+}
 /***********PRIVATE**************/
 
 void GradientMapMax::affinageX()
@@ -211,6 +228,42 @@ void GradientMapMax::affinageV4()
     }
 }
 
+bool GradientMapMax::extremites(int row, int col)
+{
+    int cpt = 0;
+
+    for (int i = row-1 ; i <= row+1; ++i)
+    {
+        for (int j = col-1; j <= col+1; ++j)
+        {
+            if (_maxGradients[i][j].end == true) cpt++;
+        }
+    }
+
+    if (cpt > 1) return true;
+    return false;
+}
+
+bool GradientMapMax::connexe(int row, int col)
+{
+    int ID, cpt=0;
+
+    for (int i = row-1 ; i <= row+1; ++i)
+    {
+        for (int j = col-1; j <= col+1; ++j)
+        {
+            if (_maxGradients[i][j].end == true)
+            {
+              cpt++;
+              if ((cpt > 1) && (ID == _maxGradients[i][j].connectedComponentId))
+                  return true;
+
+              ID = _maxGradients[i][j].connectedComponentId;
+            }
+        }
+    }
+    return false;
+}
 
 void GradientMapMax::resize()
 {

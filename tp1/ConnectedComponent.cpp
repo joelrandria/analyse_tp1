@@ -14,7 +14,7 @@ void ConnectedComponent::fromGradientMapMax(GradientMapMax &map, QList<Connected
     int map_width = map.width();
     int map_height = map.height();
 
-    components.clear();
+    components.clear();//tts les ensembles connexe
 
     for (int row = 1; row < (map_height - 1); ++row)
     {
@@ -23,19 +23,21 @@ void ConnectedComponent::fromGradientMapMax(GradientMapMax &map, QList<Connected
             pixel = map.composantAt(row, col);
             if (pixel.isAccepted() && !pixel.isInConnectedComponent())
             {
-                QPoint start(col, row);
+                QPoint start(col, row);//point de début pour trouve notre ens connexe
 
-                ConnectedComponent component;
+                ConnectedComponent component;//notre nouvelle ens connexe
 
-                QList<QPoint> startNeighbours;
-                getNeighbours(map, start, startNeighbours);
+                QList<QPoint> startNeighbours;//les des voisin du 1er point
+                getNeighbours(map, start, startNeighbours);//trouver tout les voisin du 1er pt
 
-                if (startNeighbours.size() <= 1)
+                if (startNeighbours.size() <= 1) // ajouter le 1er point dans le cas ou il est extraimeter
+                   {
                     component._ends += start;
+                    map.composantAt(start.y(), start.x()).end = true;
+                    }
+                getConnectedComponent(map, start, QPoint(), component);//crée un nouveau l'ensemble connexe
 
-                getConnectedComponent(map, start, QPoint(), component);
-
-                components += component;
+                components += component;//ajout de nouveau ens connexe avec les autre ensemble
             }
         }
     }
@@ -51,10 +53,11 @@ void ConnectedComponent::getConnectedComponent(GradientMapMax &map,
     map.composantAt(point.y(), point.x()).connectedComponentId = component._id;
     component._points += point;
 
-    getNeighbours(map, point, pointNeighbours);
+    getNeighbours(map, point, pointNeighbours);//ajout dans pointNeigbord tt les voisin du point
     if ((pointNeighbours.size() == 1) && (pointNeighbours.first() == previous))
     {
         component._ends += point;
+        map.composantAt(point.y(), point.x()).end = true;
     }
     else
     {
@@ -65,10 +68,13 @@ void ConnectedComponent::getConnectedComponent(GradientMapMax &map,
             {
                 PixelGradientInfo neighbourInfo = map.composantAt(neighbour.y(), neighbour.x());
 
-                if (!neighbourInfo.isInConnectedComponent())
+                if (!neighbourInfo.isInConnectedComponent())//si il n'est pas deja dans un ens connexe
                     getConnectedComponent(map, neighbour, point, component);
-                else if (neighbourInfo.connectedComponentId == component._id)
+                else if (neighbourInfo.connectedComponentId == component._id)//teste cycle
+                {
                     component._ends.removeAll(neighbour);
+                    map.composantAt(neighbour.y(), neighbour.x()).end = false;
+                }
             }
         }
     }

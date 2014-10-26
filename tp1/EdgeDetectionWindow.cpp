@@ -27,6 +27,8 @@ EdgeDetectionWindow::EdgeDetectionWindow(const Image& image,
     _gradientMapMax.affinage();
 
     ConnectedComponent::fromGradientMapMax(_gradientMapMax, _connectedComponents);
+    //_gradientMapMax.fermetureSimple();
+//    _gradientMapMax.affinage();
 
     qDebug() << "Nombre de composantes connexes trouvées: " << _connectedComponents.size();
 
@@ -44,6 +46,8 @@ void EdgeDetectionWindow::updateView()
 
     PixelGradientInfo composantGradient;
 
+
+
     QImage* pImage = new QImage(mapWidth, mapHeight, QImage::Format_RGB888);
 
     // Affichage des pixels filtrés
@@ -55,28 +59,32 @@ void EdgeDetectionWindow::updateView()
 
             uint pixelColor = 0;
 
-            switch (composantGradient.dir)
-            {
-            case 0: // Direction X => Rouge
+//            if(composantGradient.valS == 255)
 
-                pixelColor = qRgb(composantGradient.valS, 0, 0);
-                break;
+//            {
+                switch (composantGradient.dir)
+                {
+                case 0: // Direction X => Rouge
 
-            case 1: // Direction Y => Vert
+                    pixelColor = qRgb(composantGradient.valS, 0, 0);
+                    break;
 
-                pixelColor = qRgb(0, composantGradient.valS, 0);
-                break;
+                case 1: // Direction Y => Vert
 
-            case 2: // Direction YX => Bleu
+                    pixelColor = qRgb(0, composantGradient.valS, 0);
+                    break;
 
-                pixelColor = qRgb(0, 0,composantGradient.valS);
-                break;
+                case 2: // Direction YX => Bleu
 
-            case 3: // Direction X-Y => Jaune
+                    pixelColor = qRgb(0, 0,composantGradient.valS);
+                    break;
 
-                pixelColor = qRgb(composantGradient.valS, composantGradient.valS, 0);
-                break;
-            }
+                case 3: // Direction X-Y => Jaune
+
+                    pixelColor = qRgb(composantGradient.valS, composantGradient.valS, 0);
+                    break;
+                }
+//            }
 
             pImage->setPixel(col, row, pixelColor);
         }
