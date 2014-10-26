@@ -2,6 +2,7 @@
 #define EDGEDETECTIONWINDOW_H
 
 #include <QMainWindow>
+#include <QTime>
 
 #include "Image.h"
 #include "GradientKernel.h"

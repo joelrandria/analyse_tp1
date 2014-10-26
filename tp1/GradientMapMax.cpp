@@ -12,7 +12,7 @@ GradientMapMax::GradientMapMax(const Image &image, const GradientKernel &kernel,
     int maxValueIndex;
     float MaxValue;
 
-    resize();//initialisation de _maxGradientMap
+    resize();
 
     for(int row=0; row < _rows; row++)
     {

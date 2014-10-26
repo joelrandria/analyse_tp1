@@ -1,9 +1,12 @@
 #include "EdgeDetectionWindow.h"
 #include "ui_EdgeDetectionWindow.h"
+
 #include <QFileDialog>
+#include <QTime>
+#include <QDebug>
+
 #include <stdlib.h>
 #include <stdio.h>
-
 #include <cmath>
 
 EdgeDetectionWindow::EdgeDetectionWindow(const Image& image,
@@ -15,10 +18,9 @@ EdgeDetectionWindow::EdgeDetectionWindow(const Image& image,
     ui(new Ui::EdgeDetectionWindow),
     _image(image),
     _kernel(kernel),
-    _gradientMapMax(_image, _kernel, true),//true pr dir normalise
+    _gradientMapMax(_image, _kernel, true),
     _hysterisisLowThreshold((hysterisisLowThreshold*255)/100),
     _hysterisisHighThreshold((hysterisisHighThreshold*255)/100)
-
 {
     ui->setupUi(this);
 
