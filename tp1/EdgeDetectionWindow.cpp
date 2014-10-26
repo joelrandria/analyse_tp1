@@ -37,6 +37,8 @@ void EdgeDetectionWindow::updateView()
     _gradientMapMax.seuillageHyest(_hysterisisHighThreshold,_hysterisisLowThreshold);
     _gradientMapMax.affinage();
 
+    //_gradientMapMax.Bresenham(50,20,10,50);
+
     Composant composantGradient;
 
     QImage* pImage = new QImage(mapWidth, mapHeight, QImage::Format_RGB888);
@@ -48,31 +50,31 @@ void EdgeDetectionWindow::updateView()
             composantGradient = _gradientMapMax.getComposantAt(row, col);
 
             uint pixelColor = 0;
-            if (composantGradient.valS == 255)
-            {
+//            if (composantGradient.valS == 255)
+//            {
                 switch (composantGradient.dir)
                 {
                 case 0: // Direction X => Rouge
 
-                    pixelColor = qRgb(composantGradient.val, 0, 0);
+                    pixelColor = qRgb(composantGradient.valS, 0, 0);
                     break;
 
                 case 1: // Direction Y => Vert
 
-                    pixelColor = qRgb(0, composantGradient.val, 0);
+                    pixelColor = qRgb(0, composantGradient.valS, 0);
                     break;
 
                 case 2: // Direction YX => Bleu
 
-                    pixelColor = qRgb(0, 0,composantGradient.val);
+                    pixelColor = qRgb(0, 0,composantGradient.valS);
                     break;
 
                 case 3: // Direction X-Y => Jaune
 
-                    pixelColor = qRgb(composantGradient.val, composantGradient.val, 0);
+                    pixelColor = qRgb(composantGradient.valS, composantGradient.valS, 0);
                     break;
                 }
-            }
+//            }
 
             pImage->setPixel(col, row, pixelColor);
         }

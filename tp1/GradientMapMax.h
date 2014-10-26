@@ -25,7 +25,7 @@ public:
 
     void affinage ();
 
-
+    void Bresenham(int row1, int col1, int row2, int col2);
 
    void sauveGradient(std::string chemainDeSauve ) const;
 
@@ -39,6 +39,7 @@ private:
     void affinageY();
     void affinageYX();
     void affinageX_Y();
+    void affinageV4();
 
 };
 
