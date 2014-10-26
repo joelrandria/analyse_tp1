@@ -35,6 +35,10 @@ public:
     int hysterisisLowThreshold() const;
     int hysterisisHighThreshold() const;
 
+private:
+
+    void setHysterisisDefaultValues();
+
 public slots:
 
     void updateView();
