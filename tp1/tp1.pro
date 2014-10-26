@@ -22,10 +22,9 @@ SOURCES += main.cpp\
     GradientKernel.cpp \
     Gradient.cpp \
     GradientMap.cpp \
-    EdgeDetectionConfigDialog.cpp \
-    EdgeDetectionWindow.cpp \
     GradientMapMax.cpp \
-    ConnectedComponent.cpp
+    ConnectedComponent.cpp \
+    InteractiveEdgeDetectionDialog.cpp
 
 HEADERS  += \
     Workspace.h \
@@ -36,15 +35,13 @@ HEADERS  += \
     Gradient.h \
     GradientMap.h \
     Mask.h \
-    EdgeDetectionConfigDialog.h \
-    EdgeDetectionWindow.h \
     GradientMapMax.h \
     ConnectedComponent.h \
-    PixelGradientInfo.h
+    PixelGradientInfo.h \
+    InteractiveEdgeDetectionDialog.h
 
 FORMS    += \
     WorkspaceWindow.ui \
-    EdgeDetectionConfigDialog.ui \
-    EdgeDetectionWindow.ui
+    InteractiveEdgeDetectionDialog.ui
 
 LIBS += `pkg-config opencv --libs`

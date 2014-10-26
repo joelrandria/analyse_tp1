@@ -2,8 +2,7 @@
 #include "ui_WorkspaceWindow.h"
 #include "Tp1Application.h"
 #include "Workspace.h"
-#include "EdgeDetectionConfigDialog.h"
-#include "EdgeDetectionWindow.h"
+#include "InteractiveEdgeDetectionDialog.h"
 
 #include <QFileDialog>
 #include <QUrl>
@@ -71,15 +70,6 @@ void WorkspaceWindow::on_actionCloseFile_triggered()
 
 void WorkspaceWindow::on_actionEdgeDetection_triggered()
 {
-    EdgeDetectionConfigDialog configDialog(this);
-    if (!configDialog.exec())
-        return;
-
-    EdgeDetectionWindow* detectionWindow = new EdgeDetectionWindow(_workspace->image(),
-                                                                   configDialog.getSelectedKernel(),
-                                                                   configDialog.hysterisisLowThreshold(),
-                                                                   configDialog.hysterisisHighThreshold(),
-                                                                   this);
-
-    detectionWindow->show();
+    InteractiveEdgeDetectionDialog* dialog = new InteractiveEdgeDetectionDialog(_workspace->image(), this);
+    dialog->show();
 }
