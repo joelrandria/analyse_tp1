@@ -1,10 +1,6 @@
 #include "GradientMap.h"
 #include "Gradient.h"
 
-#include <QElapsedTimer>
-#include <QTime>
-#include <QDebug>
-
 #include <opencv2/highgui/highgui.hpp>
 
 GradientMap::GradientMap(int rows, int cols)

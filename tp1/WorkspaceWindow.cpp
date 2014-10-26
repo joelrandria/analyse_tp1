@@ -7,8 +7,6 @@
 
 #include <QFileDialog>
 #include <QUrl>
-#include <QTime>
-#include <QDebug>
 
 #include <opencv2/core/core.hpp>
 

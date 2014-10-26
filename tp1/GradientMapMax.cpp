@@ -1,8 +1,5 @@
 ﻿#include "GradientMapMax.h"
 
-#include <QTime>
-#include <QDebug>
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <fstream>
@@ -11,11 +8,6 @@ using namespace std;
 
 GradientMapMax::GradientMapMax(const Image &image, const GradientKernel &kernel, const bool normaliser) : GradientMap(image,kernel)
 {
-    ///////////////////////////////////////////////////////////////////
-    QTime timer;
-    timer.start();
-    ///////////////////////////////////////////////////////////////////
-
     float normalizationFactor = kernel.getNormalizationFactor();
     int maxValueIndex;
     float MaxValue;
@@ -37,10 +29,6 @@ GradientMapMax::GradientMapMax(const Image &image, const GradientKernel &kernel,
             _maxGradients[row][col].dir = maxValueIndex;
         }
     }
-
-    ///////////////////////////////////////////////////////////////////
-    qDebug() << "Temps pour construire la GradientMapMax: " << timer.elapsed();
-    ///////////////////////////////////////////////////////////////////
 }
 
 void GradientMapMax::seuillageHyest(float seuilH, float seuilBas)
@@ -67,7 +55,7 @@ void GradientMapMax::affinage()
 }
 
 
-const Composant GradientMapMax::getComposantAt(int row, int col) const
+PixelGradientInfo& GradientMapMax::composantAt(int row, int col)
 {
     return _maxGradients[row][col];
 }

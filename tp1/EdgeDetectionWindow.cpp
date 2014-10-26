@@ -2,8 +2,6 @@
 #include "ui_EdgeDetectionWindow.h"
 
 #include <QFileDialog>
-#include <QTime>
-#include <QDebug>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -24,6 +22,9 @@ EdgeDetectionWindow::EdgeDetectionWindow(const Image& image,
 {
     ui->setupUi(this);
 
+    _gradientMapMax.seuillageHyest(_hysterisisHighThreshold,_hysterisisLowThreshold);
+    _gradientMapMax.affinage();
+
     updateView();
 }
 EdgeDetectionWindow::~EdgeDetectionWindow()
@@ -36,10 +37,7 @@ void EdgeDetectionWindow::updateView()
     int mapWidth = _gradientMapMax.width();
     int mapHeight = _gradientMapMax.height();
 
-    _gradientMapMax.seuillageHyest(_hysterisisHighThreshold,_hysterisisLowThreshold);
-    _gradientMapMax.affinage();
-
-    Composant composantGradient;
+    PixelGradientInfo composantGradient;
 
     QImage* pImage = new QImage(mapWidth, mapHeight, QImage::Format_RGB888);
 
@@ -47,7 +45,7 @@ void EdgeDetectionWindow::updateView()
     {
         for (int col = 0; col < mapWidth; ++col)
         {
-            composantGradient = _gradientMapMax.getComposantAt(row, col);
+            composantGradient = _gradientMapMax.composantAt(row, col);
 
             uint pixelColor = 0;
             if (composantGradient.valS == 255)

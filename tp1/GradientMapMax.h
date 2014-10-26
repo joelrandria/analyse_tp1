@@ -1,35 +1,29 @@
 #ifndef GRADIENTMAPMAX_H
 #define GRADIENTMAPMAX_H
+
 #include "GradientMap.h"
-
-
-typedef struct
-{
-    float valS;
-    float val;
-    int dir;
-}Composant;
+#include "PixelGradientInfo.h"
 
 class GradientMapMax : public GradientMap
 {
 private:
 
-    std::vector<std::vector<Composant> > _maxGradients;
+    std::vector<std::vector<PixelGradientInfo> > _maxGradients;
 
 public:
+
     GradientMapMax(const Image& image, const GradientKernel& kernel, const bool normaliser=false);
 
-    const Composant getComposantAt(int row, int col) const;
+    PixelGradientInfo& composantAt(int row, int col);
 
     void seuillageHyest (float seuilH, float seuilBas);
 
     void affinage ();
 
-
-
     void sauveGradient(std::string chemainDeSauve ) const;
 
 private:
+
     void resize();
 
     void seuillageBas(float seuilB);
