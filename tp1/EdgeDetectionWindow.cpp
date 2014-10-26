@@ -2,6 +2,7 @@
 #include "ui_EdgeDetectionWindow.h"
 
 #include <QFileDialog>
+#include <QDebug>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -25,6 +26,10 @@ EdgeDetectionWindow::EdgeDetectionWindow(const Image& image,
     _gradientMapMax.seuillageHyest(_hysterisisHighThreshold,_hysterisisLowThreshold);
     _gradientMapMax.affinage();
 
+    ConnectedComponent::fromGradientMapMax(_gradientMapMax, _connectedComponents);
+
+    qDebug() << "Nombre de composantes connexes trouvées: " << _connectedComponents.size();
+
     updateView();
 }
 EdgeDetectionWindow::~EdgeDetectionWindow()
@@ -41,6 +46,7 @@ void EdgeDetectionWindow::updateView()
 
     QImage* pImage = new QImage(mapWidth, mapHeight, QImage::Format_RGB888);
 
+    // Affichage des pixels filtrés
     for (int row = 0; row < mapHeight; ++row)
     {
         for (int col = 0; col < mapWidth; ++col)
@@ -48,33 +54,43 @@ void EdgeDetectionWindow::updateView()
             composantGradient = _gradientMapMax.composantAt(row, col);
 
             uint pixelColor = 0;
-            if (composantGradient.valS == 255)
+
+            switch (composantGradient.dir)
             {
-                switch (composantGradient.dir)
-                {
-                case 0: // Direction X => Rouge
+            case 0: // Direction X => Rouge
 
-                    pixelColor = qRgb(composantGradient.valS, 0, 0);
-                    break;
+                pixelColor = qRgb(composantGradient.valS, 0, 0);
+                break;
 
-                case 1: // Direction Y => Vert
+            case 1: // Direction Y => Vert
 
-                    pixelColor = qRgb(0, composantGradient.valS, 0);
-                    break;
+                pixelColor = qRgb(0, composantGradient.valS, 0);
+                break;
 
-                case 2: // Direction YX => Bleu
+            case 2: // Direction YX => Bleu
 
-                    pixelColor = qRgb(0, 0,composantGradient.valS);
-                    break;
+                pixelColor = qRgb(0, 0,composantGradient.valS);
+                break;
 
-                case 3: // Direction X-Y => Jaune
+            case 3: // Direction X-Y => Jaune
 
-                    pixelColor = qRgb(composantGradient.valS, composantGradient.valS, 0);
-                    break;
-                }
+                pixelColor = qRgb(composantGradient.valS, composantGradient.valS, 0);
+                break;
             }
 
             pImage->setPixel(col, row, pixelColor);
+        }
+    }
+
+    // Affichage des extrémités des composantes connexes en blanc
+    ConnectedComponent component;
+    for (int i = 0; i < _connectedComponents.size(); ++i)
+    {
+        component = _connectedComponents[i];
+        for (int j = 0; j < component.ends().size(); ++j)
+        {
+            QPoint end = component.ends()[j];
+            pImage->setPixel(end, qRgb(255, 255, 255));
         }
     }
 

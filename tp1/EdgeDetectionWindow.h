@@ -1,11 +1,13 @@
 #ifndef EDGEDETECTIONWINDOW_H
 #define EDGEDETECTIONWINDOW_H
 
+#include <QList>
 #include <QMainWindow>
 
 #include "Image.h"
 #include "GradientKernel.h"
 #include "GradientMapMax.h"
+#include "ConnectedComponent.h"
 
 namespace Ui {
 class EdgeDetectionWindow;
@@ -26,6 +28,8 @@ private:
 
     int _hysterisisLowThreshold;
     int _hysterisisHighThreshold;
+
+    QList<ConnectedComponent> _connectedComponents;
 
 public:
 

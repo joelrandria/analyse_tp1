@@ -24,6 +24,8 @@ public:
 
     ConnectedComponent();
 
+    const QList<QPoint>& ends() const { return _ends; };
+
 public:
 
     static void fromGradientMapMax(GradientMapMax& map,
@@ -34,7 +36,7 @@ private:
     static void getConnectedComponent(GradientMapMax& map,
                                       const QPoint& point,
                                       const QPoint& previous,
-                                      ConnectedComponent component);
+                                      ConnectedComponent& component);
 
     static void getNeighbours(GradientMapMax& map,
                               const QPoint& point,

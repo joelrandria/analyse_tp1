@@ -26,7 +26,12 @@ void ConnectedComponent::fromGradientMapMax(GradientMapMax &map, QList<Connected
                 QPoint start(col, row);
 
                 ConnectedComponent component;
-                component._ends += start;
+
+                QList<QPoint> startNeighbours;
+                getNeighbours(map, start, startNeighbours);
+
+                if (startNeighbours.size() <= 1)
+                    component._ends += start;
 
                 getConnectedComponent(map, start, QPoint(), component);
 
@@ -39,7 +44,7 @@ void ConnectedComponent::fromGradientMapMax(GradientMapMax &map, QList<Connected
 void ConnectedComponent::getConnectedComponent(GradientMapMax &map,
                                                const QPoint &point,
                                                const QPoint &previous,
-                                               ConnectedComponent component)
+                                               ConnectedComponent& component)
 {
     QList<QPoint> pointNeighbours;
 
@@ -47,7 +52,6 @@ void ConnectedComponent::getConnectedComponent(GradientMapMax &map,
     component._points += point;
 
     getNeighbours(map, point, pointNeighbours);
-
     if ((pointNeighbours.size() == 1) && (pointNeighbours.first() == previous))
     {
         component._ends += point;
@@ -60,6 +64,7 @@ void ConnectedComponent::getConnectedComponent(GradientMapMax &map,
             if (neighbour != previous)
             {
                 PixelGradientInfo neighbourInfo = map.composantAt(neighbour.y(), neighbour.x());
+
                 if (!neighbourInfo.isInConnectedComponent())
                     getConnectedComponent(map, neighbour, point, component);
                 else if (neighbourInfo.connectedComponentId == component._id)
@@ -79,7 +84,10 @@ void ConnectedComponent::getNeighbours(GradientMapMax &map,
     {
         for (int j = -1; j < 2; ++j)
         {
-            if ((i != 0 && j != 0) && (map.composantAt(point.y() + i, point.x() + j).isAccepted()))
+            if (i == 0 && j == 0)
+                continue;
+
+            if (map.composantAt(point.y() + i, point.x() + j).isAccepted())
                 neighbours += QPoint(point.x() + j, point.y() + i);
         }
     }
