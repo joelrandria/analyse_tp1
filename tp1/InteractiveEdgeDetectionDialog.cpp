@@ -12,7 +12,7 @@ InteractiveEdgeDetectionDialog::InteractiveEdgeDetectionDialog(const Image& imag
 {
     ui->setupUi(this);
 
-    updateView();
+    updateGradientMapMax();
 }
 InteractiveEdgeDetectionDialog::~InteractiveEdgeDetectionDialog()
 {
@@ -138,6 +138,12 @@ int InteractiveEdgeDetectionDialog::hysterisisHighThreshold() const
     return (ui->highThresholdLineEdit->value() * 255) / 100;
 }
 
+void InteractiveEdgeDetectionDialog::setHysterisisDefaultValues()
+{
+    ui->lowThresholdLineEdit->setValue(10);
+    ui->highThresholdLineEdit->setValue(20);
+}
+
 void InteractiveEdgeDetectionDialog::on_actionEnregistrer_sous_triggered()
 {
     QString savePath = QFileDialog::getSaveFileName(this,
@@ -150,10 +156,14 @@ void InteractiveEdgeDetectionDialog::on_actionEnregistrer_sous_triggered()
 
 void InteractiveEdgeDetectionDialog::on_maskTypeComboBox_currentIndexChanged(int)
 {
+    setHysterisisDefaultValues();
+
     updateGradientMapMax();
 }
 void InteractiveEdgeDetectionDialog::on_filteringTypeComboBox_currentIndexChanged(int)
 {
+    setHysterisisDefaultValues();
+
     updateGradientMapMax();
 }
 
