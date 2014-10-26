@@ -87,6 +87,10 @@ void ConnectedComponent::getNeighbours(GradientMapMax &map,
             if (i == 0 && j == 0)
                 continue;
 
+            if ((point.y() + i < 0) || (point.y() + i >= map.height())
+                || (point.x() + j < 0) || (point.x() + j >= map.width()))
+                continue;
+
             if (map.composantAt(point.y() + i, point.x() + j).isAccepted())
                 neighbours += QPoint(point.x() + j, point.y() + i);
         }

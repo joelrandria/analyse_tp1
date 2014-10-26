@@ -1,0 +1,181 @@
+#include "InteractiveEdgeDetectionDialog.h"
+#include "ui_InteractiveEdgeDetectionDialog.h"
+
+#include <QFileDialog>
+
+InteractiveEdgeDetectionDialog::InteractiveEdgeDetectionDialog(const Image& image,
+                                                               QWidget *parent):
+    QMainWindow(parent),
+    ui(new Ui::InteractiveEdgeDetectionDialog),
+    _image(image),
+    _gradientMapMax(image, GradientKernel::Prewitt2D(), true)
+{
+    ui->setupUi(this);
+
+    updateView();
+}
+InteractiveEdgeDetectionDialog::~InteractiveEdgeDetectionDialog()
+{
+    delete ui;
+}
+
+void InteractiveEdgeDetectionDialog::updateGradientMapMax()
+{
+    _gradientMapMax = GradientMapMax(_image, selectedKernel(), true);
+
+    updateView();
+}
+
+void InteractiveEdgeDetectionDialog::updateView()
+{
+    _gradientMapMax.seuillageHyest(hysterisisHighThreshold(), hysterisisLowThreshold());
+    _gradientMapMax.affinage();
+
+    ConnectedComponent::fromGradientMapMax(_gradientMapMax, _connectedComponents);
+
+    int mapWidth = _gradientMapMax.width();
+    int mapHeight = _gradientMapMax.height();
+
+    PixelGradientInfo composantGradient;
+
+    QImage* pImage = new QImage(mapWidth, mapHeight, QImage::Format_RGB888);
+
+    // Affichage des pixels filtrés
+    for (int row = 0; row < mapHeight; ++row)
+    {
+        for (int col = 0; col < mapWidth; ++col)
+        {
+            composantGradient = _gradientMapMax.composantAt(row, col);
+
+            uint pixelColor = 0;
+
+            switch (composantGradient.dir)
+            {
+            case 0: // Direction X => Rouge
+
+                pixelColor = qRgb(composantGradient.valS, 0, 0);
+                break;
+
+            case 1: // Direction Y => Vert
+
+                pixelColor = qRgb(0, composantGradient.valS, 0);
+                break;
+
+            case 2: // Direction YX => Bleu
+
+                pixelColor = qRgb(0, 0,composantGradient.valS);
+                break;
+
+            case 3: // Direction X-Y => Jaune
+
+                pixelColor = qRgb(composantGradient.valS, composantGradient.valS, 0);
+                break;
+            }
+
+            pImage->setPixel(col, row, pixelColor);
+        }
+    }
+
+    // Affichage des extrémités des composantes connexes en blanc
+    ConnectedComponent component;
+    for (int i = 0; i < _connectedComponents.size(); ++i)
+    {
+        component = _connectedComponents[i];
+        for (int j = 0; j < component.ends().size(); ++j)
+        {
+            QPoint end = component.ends()[j];
+            pImage->setPixel(end, qRgb(255, 255, 255));
+        }
+    }
+
+    ui->pixmapLabel->setPixmap(QPixmap::fromImage(*pImage));
+}
+
+GradientKernel InteractiveEdgeDetectionDialog::selectedKernel() const
+{
+    GradientKernel gk;
+
+    if (ui->filteringTypeComboBox->currentText().contains("Bi-directionnel"))
+    {
+        if(ui->maskTypeComboBox->currentText().contains("Prewitt"))
+        {
+            gk = GradientKernel::Prewitt2D();
+        }
+        else if(ui->maskTypeComboBox->currentText().contains("Sobel"))
+        {
+            gk = GradientKernel::Sobel2D();
+        }
+        else if (ui->maskTypeComboBox->currentText().contains("Kirsch"))
+        {
+            gk = GradientKernel::Kirsch2D();
+        }
+    }
+    else if (ui->filteringTypeComboBox->currentText().contains("Multi-directionnel"))
+    {
+        if(ui->maskTypeComboBox->currentText().contains("Prewitt"))
+        {
+            gk = GradientKernel::Prewitt4D();
+        }
+        else if(ui->maskTypeComboBox->currentText().contains("Sobel"))
+        {
+            gk = GradientKernel::Sobel4D();
+        }
+        else if (ui->maskTypeComboBox->currentText().contains("Kirsch"))
+        {
+            gk = GradientKernel::Kirsch4D();
+        }
+    }
+
+    return gk;
+}
+
+int InteractiveEdgeDetectionDialog::hysterisisLowThreshold() const
+{
+    return (ui->lowThresholdLineEdit->value() * 255) / 100;
+}
+int InteractiveEdgeDetectionDialog::hysterisisHighThreshold() const
+{
+    return (ui->highThresholdLineEdit->value() * 255) / 100;
+}
+
+void InteractiveEdgeDetectionDialog::on_actionEnregistrer_sous_triggered()
+{
+    QString savePath = QFileDialog::getSaveFileName(this,
+                                                    "Enregistrer sous",
+                                                    "",
+                                                    tr("Fichiers images (*.png *.jpg *.bmp)"));
+    if (!savePath.isEmpty())
+        ui->pixmapLabel->pixmap()->save(savePath);
+}
+
+void InteractiveEdgeDetectionDialog::on_maskTypeComboBox_currentIndexChanged(int)
+{
+    updateGradientMapMax();
+}
+void InteractiveEdgeDetectionDialog::on_filteringTypeComboBox_currentIndexChanged(int)
+{
+    updateGradientMapMax();
+}
+
+void InteractiveEdgeDetectionDialog::on_highThresholdSlider_valueChanged(int)
+{
+    updateView();
+}
+void InteractiveEdgeDetectionDialog::on_highThresholdLineEdit_valueChanged(int arg1)
+{
+    if (ui->lowThresholdSlider->value() > arg1)
+        ui->lowThresholdSlider->setValue(arg1);
+
+    updateView();
+}
+void InteractiveEdgeDetectionDialog::on_lowThresholdSlider_valueChanged(int)
+{
+    updateView();
+}
+void InteractiveEdgeDetectionDialog::on_lowThresholdLineEdit_valueChanged(int arg1)
+{
+    if (ui->highThresholdSlider->value() < arg1)
+        ui->highThresholdSlider->setValue(arg1);
+
+    updateView();
+}
