@@ -5,9 +5,12 @@ class PixelGradientInfo
 {
 public:
 
+    // Attributs spécifiques au gradient
     int dir;
     float val;
     float valS;
+
+    // Attributs spécifiques à la connexité
     bool end = false;
     int connectedComponentId = -1;
 

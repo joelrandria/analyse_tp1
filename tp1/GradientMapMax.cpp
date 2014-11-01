@@ -1,5 +1,8 @@
 ﻿#include "GradientMapMax.h"
 
+#include <QString>
+#include <QDebug>
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <fstream>
@@ -129,6 +132,122 @@ void GradientMapMax::resetConnectedComponentsInfo()
             composantAt(row, col).resetConnectedComponentInfo();
 }
 
+void GradientMapMax::closeEdges()
+{
+    for (int row = 0; row < _rows; ++row)
+    {
+        for (int col = 0; col < _cols; ++col)
+        {
+            PixelGradientInfo pix = composantAt(row, col);
+            if (pix.end)
+            {
+                QPoint source(col, row);
+
+                QVector2D edgeLocalDirection = getEndpointLocalDirection(source, 5);
+
+                if (!edgeLocalDirection.isNull())
+                {
+                    QPoint target = findMatchingEndpoint(source, edgeLocalDirection, cos(M_PI / 5), 10);
+                    if (!target.isNull())
+                    {
+                        Bresenham(source.y(), source.x(), target.y(), target.x());
+
+                        composantAt(source.y(), source.x()).end = false;
+                        composantAt(target.y(), target.x()).end = false;
+                    }
+                }
+            }
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////
+
+//    QVector2D localDirection = getEndpointLocalDirection(QPoint(124, 149), 5);
+
+//    qDebug() << QString("localDirection = <%1, %2>")
+//                .arg(localDirection.x()).arg(localDirection.y());
+
+//    int test = 42;
+
+    ///////////////////////////////////////////////////////////////////
+}
+void GradientMapMax::getEndpointConnectedPoints(const QPoint& point, int maxAnteriorityDepth, QList<QPoint>& points)
+{
+    if (maxAnteriorityDepth <= 0)
+        return;
+
+    points += point;
+
+    PixelGradientInfo refPixel = composantAt(point.y(), point.x());
+
+    for (int drow = -1; drow <= 1; ++drow)
+    {
+        for (int dcol = -1; dcol <= 1; ++dcol)
+        {
+            if (drow == 0 && dcol == 0)
+                continue;
+
+            QPoint framePoint(point.x() + dcol, point.y() + drow);
+            if (framePoint.x() < 0 || framePoint.x() >= _cols || framePoint.y() < 0 || framePoint.y() >= _rows)
+                continue;
+
+            PixelGradientInfo testPixel = composantAt(framePoint.y(), framePoint.x());
+            if (testPixel.connectedComponentId == refPixel.connectedComponentId && !points.contains(framePoint))
+                getEndpointConnectedPoints(framePoint, maxAnteriorityDepth - 1, points);
+        }
+    }
+}
+QVector2D GradientMapMax::getEndpointLocalDirection(const QPoint& point, int maxAnteriorityDepth)
+{
+    QList<QPoint> connectedPoints;
+
+    getEndpointConnectedPoints(point, maxAnteriorityDepth, connectedPoints);
+
+    if (connectedPoints.size() < 2)
+        return QVector2D();
+
+    QPoint sumVector;
+    for (int i = 0; i < connectedPoints.size() - 1; ++i)
+        sumVector += connectedPoints[i] - connectedPoints[i + 1];
+
+    return QVector2D(sumVector / (connectedPoints.size() - 1));
+}
+
+QPoint GradientMapMax::findMatchingEndpoint(const QPoint& source, QVector2D sourceDirection, float toleranceCosAngle, int searchFrameSize)
+{
+    int searchFrameHalfSize = searchFrameSize / 2;
+
+    sourceDirection.normalize();
+
+    PixelGradientInfo sourcePixel = composantAt(source.y(), source.x());
+
+    for (int drow = -searchFrameHalfSize; drow <= searchFrameHalfSize; ++drow)
+    {
+        for (int dcol = -searchFrameHalfSize; dcol <= searchFrameHalfSize; ++dcol)
+        {
+            if (drow == 0 && dcol == 0)
+                continue;
+
+            QPoint testPoint(source.x() + dcol, source.y() + drow);
+            if (testPoint.x() < 0 || testPoint.x() >= _cols || testPoint.y() < 0 || testPoint.y() >= _rows)
+                continue;
+
+            PixelGradientInfo testPixel = composantAt(testPoint.y(), testPoint.x());
+            if (testPixel.end == true && testPixel.connectedComponentId != sourcePixel.connectedComponentId)
+            {
+                QVector2D targetDirection(testPoint - source);
+                targetDirection.normalize();
+
+                float targetCosAngle = QVector2D::dotProduct(sourceDirection, targetDirection);
+                if (targetCosAngle > toleranceCosAngle)
+                    return testPoint;
+            }
+        }
+    }
+
+    return QPoint();
+}
+
 //void GradientMapMax::fermeture()
 //{
 //    Pixel p1,p2;
@@ -190,7 +309,6 @@ void GradientMapMax::affinageX()
         }
     }
 }
-
 void GradientMapMax::affinageY()
 {
     for (int row = 1; row < _rows-1; row++)
@@ -207,7 +325,6 @@ void GradientMapMax::affinageY()
         }
     }
 }
-
 void GradientMapMax::affinageYX()
 {
     for (int row = 1; row < _rows-1; row++)
@@ -224,7 +341,6 @@ void GradientMapMax::affinageYX()
         }
     }
 }
-
 void GradientMapMax::affinageX_Y()
 {
     for (int row = 1; row < _rows-1; row++)
@@ -241,7 +357,6 @@ void GradientMapMax::affinageX_Y()
         }
     }
 }
-
 void GradientMapMax::affinageV4()
 {
     for (int row = 1; row < _rows-1; row++)

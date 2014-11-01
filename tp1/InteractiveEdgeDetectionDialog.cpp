@@ -40,6 +40,12 @@ void InteractiveEdgeDetectionDialog::updateView()
             _gradientMapMax.affinage();
 
             ConnectedComponent::fromGradientMapMax(_gradientMapMax, _connectedComponents);
+
+            ///////////////////////////////////////////////////////////////////
+
+            _gradientMapMax.closeEdges();
+
+            ///////////////////////////////////////////////////////////////////
         }
     }
 
@@ -89,16 +95,16 @@ void InteractiveEdgeDetectionDialog::updateView()
     }
 
     // Affichage des extrémités des composantes connexes en blanc
-//    ConnectedComponent component;
-//    for (int i = 0; i < _connectedComponents.size(); ++i)
-//    {
-//        component = _connectedComponents[i];
-//        for (int j = 0; j < component.ends().size(); ++j)
-//        {
-//            QPoint end = component.ends()[j];
-//            pImage->setPixel(end, qRgb(255, 255, 255));
-//        }
-//    }
+    ConnectedComponent component;
+    for (int i = 0; i < _connectedComponents.size(); ++i)
+    {
+        component = _connectedComponents[i];
+        for (int j = 0; j < component.ends().size(); ++j)
+        {
+            QPoint end = component.ends()[j];
+            pImage->setPixel(end, qRgb(255, 255, 255));
+        }
+    }
 
     ui->pixmapLabel->setPixmap(QPixmap::fromImage(*pImage));
 }
