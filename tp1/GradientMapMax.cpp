@@ -119,6 +119,16 @@ void GradientMapMax::Bresenham(int row1,int col1,int row2,int col2)
     }
 }
 
+void GradientMapMax::resetConnectedComponentsInfo()
+{
+    int _width = width();
+    int _height = height();
+
+    for (int row = 0; row < _height; ++row)
+        for (int col = 0; col < _width; ++col)
+            composantAt(row, col).resetConnectedComponentInfo();
+}
+
 //void GradientMapMax::fermeture()
 //{
 //    Pixel p1,p2;

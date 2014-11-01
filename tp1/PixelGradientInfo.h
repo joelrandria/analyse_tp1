@@ -13,8 +13,19 @@ public:
 
 public:
 
+    PixelGradientInfo()
+    {
+        resetConnectedComponentInfo();
+    }
+
     bool isAccepted() const { return (valS > 0); }
     bool isInConnectedComponent() const { return (connectedComponentId >= 0); }
+
+    void resetConnectedComponentInfo()
+    {
+        end = false;
+        connectedComponentId = -1;
+    }
 };
 
 #endif // PIXELGRADIENTINFO_H

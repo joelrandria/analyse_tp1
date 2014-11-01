@@ -24,12 +24,11 @@ public:
     PixelGradientInfo& composantAt(int row, int col);
 
     void seuillageHyest (float seuilH, float seuilBas);
-
     void affinage ();
-
     void Bresenham(int row1, int col1, int row2, int col2);
-
 //    void fermetureSimple();
+
+    void resetConnectedComponentsInfo();
 
     void sauveGradient(std::string chemainDeSauve ) const;
 
