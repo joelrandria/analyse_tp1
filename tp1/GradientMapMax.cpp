@@ -1,4 +1,4 @@
-#include "GradientMapMax.h"
+﻿#include "GradientMapMax.h"
 
 #include <QString>
 #include <QDebug>
@@ -82,7 +82,7 @@ void GradientMapMax::Bresenham(int row1,int col1,int row2,int col2)
     row=row1;
     col=col1;
 
-    _maxGradients[row][col].valS = 100;
+    _maxGradients[row][col].valS = 255;
 
     if(drow > dcol)
     {
@@ -99,7 +99,7 @@ void GradientMapMax::Bresenham(int row1,int col1,int row2,int col2)
             }
             else e += inc2;
             row += incR;
-            _maxGradients[row][col].valS = 100;
+            _maxGradients[row][col].valS = 255;
         }
     }
     else
@@ -118,9 +118,19 @@ void GradientMapMax::Bresenham(int row1,int col1,int row2,int col2)
             else e += inc2;
             col += incC;
             //draw_pixel(x,y, BLACK);
-            _maxGradients[row][col].valS = 100;
+            _maxGradients[row][col].valS = 255;
         }
     }
+}
+
+void GradientMapMax::resetConnectedComponentsInfo()
+{
+    int _width = width();
+    int _height = height();
+
+    for (int row = 0; row < _height; ++row)
+        for (int col = 0; col < _width; ++col)
+            composantAt(row, col).resetConnectedComponentInfo();
 }
 
 void GradientMapMax::fermeture()
@@ -153,7 +163,7 @@ void GradientMapMax::fermeture()
                 }
                 else
                 {
-//                    qDebug() << QString("Aucun raccordement trouvé pour <%1, %2>").arg(p1.r).arg(p1.c);
+//                    qDebug() << QString("Aucun raccordement trouvÃ© pour <%1, %2>").arg(p1.r).arg(p1.c);
                 }
             }
 

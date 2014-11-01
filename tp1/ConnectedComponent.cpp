@@ -16,6 +16,8 @@ void ConnectedComponent::fromGradientMapMax(GradientMapMax &map, QList<Connected
 
     components.clear();//tts les ensembles connexe
 
+    map.resetConnectedComponentsInfo();
+
     for (int row = 1; row < (map_height - 1); ++row)
     {
         for (int col = 1; col < (map_width - 1); ++col)
@@ -31,10 +33,10 @@ void ConnectedComponent::fromGradientMapMax(GradientMapMax &map, QList<Connected
                 getNeighbours(map, start, startNeighbours);//trouver tout les voisin du 1er pt
 
                 if (startNeighbours.size() <= 1) // ajouter le 1er point dans le cas ou il est extraimeter
-                   {
+                {
                     component._ends += start;
                     map.composantAt(start.y(), start.x()).end = true;
-                    }
+                }
                 getConnectedComponent(map, start, QPoint(), component);//crée un nouveau l'ensemble connexe
 
                 components += component;//ajout de nouveau ens connexe avec les autre ensemble
@@ -94,7 +96,7 @@ void ConnectedComponent::getNeighbours(GradientMapMax &map,
                 continue;
 
             if ((point.y() + i < 0) || (point.y() + i >= map.height())
-                || (point.x() + j < 0) || (point.x() + j >= map.width()))
+                    || (point.x() + j < 0) || (point.x() + j >= map.width()))
                 continue;
 
             if (map.composantAt(point.y() + i, point.x() + j).isAccepted())

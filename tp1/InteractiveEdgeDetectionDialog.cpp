@@ -28,21 +28,34 @@ void InteractiveEdgeDetectionDialog::updateGradientMapMax()
 
 void InteractiveEdgeDetectionDialog::updateView()
 {
-    _gradientMapMax.seuillageHyest(hysterisisHighThreshold(), hysterisisLowThreshold());
-    _gradientMapMax.affinage();
+    bool bDrawRawValues = true;
+    if (ui->hysteresisThresholdingGroupBox->isChecked())
+    {
+        bDrawRawValues = false;
 
+        _gradientMapMax.seuillageHyest(hysterisisHighThreshold(), hysterisisLowThreshold());
 
-    ConnectedComponent::fromGradientMapMax(_gradientMapMax, _connectedComponents);
-    _gradientMapMax.fermeture();
+        if (ui->edgeRefiningCheckbox->isChecked())
+        {
+            _gradientMapMax.affinage();
+
+            ConnectedComponent::fromGradientMapMax(_gradientMapMax, _connectedComponents);
+
+            if(ui->edgeClosureCheckbox->isChecked())
+            {
+                _gradientMapMax.fermeture();
+            }
+        }
+
+    }
 
     int mapWidth = _gradientMapMax.width();
     int mapHeight = _gradientMapMax.height();
 
-    PixelGradientInfo composantGradient;
-
     QImage* pImage = new QImage(mapWidth, mapHeight, QImage::Format_RGB888);
 
     // Affichage des pixels filtrés
+    PixelGradientInfo composantGradient;
     for (int row = 0; row < mapHeight; ++row)
     {
         for (int col = 0; col < mapWidth; ++col)
@@ -50,27 +63,30 @@ void InteractiveEdgeDetectionDialog::updateView()
             composantGradient = _gradientMapMax.composantAt(row, col);
 
             uint pixelColor = 0;
-
             switch (composantGradient.dir)
             {
             case 0: // Direction X => Rouge
 
-                pixelColor = qRgb(composantGradient.valS    , 0, 0);
+                pixelColor = qRgb(bDrawRawValues ? composantGradient.val : composantGradient.valS, 0, 0);
+
                 break;
 
             case 1: // Direction Y => Vert
 
-                pixelColor = qRgb(0, composantGradient.valS, 0);
+                pixelColor = qRgb(0, bDrawRawValues ? composantGradient.val : composantGradient.valS, 0);
+
                 break;
 
             case 2: // Direction YX => Bleu
 
-                pixelColor = qRgb(0, 0,composantGradient.valS);
+                pixelColor = qRgb(0, 0, bDrawRawValues ? composantGradient.val : composantGradient.valS);
+
                 break;
 
             case 3: // Direction X-Y => Jaune
 
-                pixelColor = qRgb(composantGradient.valS, composantGradient.valS, 0);
+                pixelColor = qRgb(bDrawRawValues ? composantGradient.val : composantGradient.valS, bDrawRawValues ? composantGradient.val : composantGradient.valS, 0);
+
                 break;
             }
 
@@ -79,16 +95,16 @@ void InteractiveEdgeDetectionDialog::updateView()
     }
 
     // Affichage des extrémités des composantes connexes en blanc
-    ConnectedComponent component;
-    for (int i = 0; i < _connectedComponents.size(); ++i)
-    {
-        component = _connectedComponents[i];
-        for (int j = 0; j < component.ends().size(); ++j)
-        {
-            QPoint end = component.ends()[j];
-            pImage->setPixel(end, qRgb(255, 255, 255));
-        }
-    }
+//    ConnectedComponent component;
+//    for (int i = 0; i < _connectedComponents.size(); ++i)
+//    {
+//        component = _connectedComponents[i];
+//        for (int j = 0; j < component.ends().size(); ++j)
+//        {
+//            QPoint end = component.ends()[j];
+//            pImage->setPixel(end, qRgb(255, 255, 255));
+//        }
+//    }
 
     ui->pixmapLabel->setPixmap(QPixmap::fromImage(*pImage));
 }
@@ -169,6 +185,14 @@ void InteractiveEdgeDetectionDialog::on_filteringTypeComboBox_currentIndexChange
     updateGradientMapMax();
 }
 
+void InteractiveEdgeDetectionDialog::on_hysteresisThresholdingGroupBox_toggled(bool arg1)
+{
+    enableEdgeRefining(arg1);
+    enableEdgeClosure(arg1);
+
+    updateView();
+}
+
 void InteractiveEdgeDetectionDialog::on_highThresholdSlider_valueChanged(int)
 {
     updateView();
@@ -189,5 +213,27 @@ void InteractiveEdgeDetectionDialog::on_lowThresholdLineEdit_valueChanged(int ar
     if (ui->highThresholdSlider->value() < arg1)
         ui->highThresholdSlider->setValue(arg1);
 
+    updateView();
+}
+
+void InteractiveEdgeDetectionDialog::enableEdgeRefining(bool enabled)
+{
+    ui->edgeRefiningCheckbox->setEnabled(enabled);
+    if (!enabled)
+        ui->edgeRefiningCheckbox->setChecked(false);
+}
+void InteractiveEdgeDetectionDialog::on_edgeRefiningCheckbox_toggled(bool)
+{
+    updateView();
+}
+
+void InteractiveEdgeDetectionDialog::enableEdgeClosure(bool enabled)
+{
+    ui->edgeClosureCheckbox->setEnabled(enabled);
+    if (!enabled)
+        ui->edgeClosureCheckbox->setChecked(false);
+}
+void InteractiveEdgeDetectionDialog::on_edgeClosureCheckbox_toggled(bool)
+{
     updateView();
 }

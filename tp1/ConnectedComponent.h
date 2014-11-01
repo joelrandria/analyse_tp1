@@ -24,7 +24,7 @@ public:
 
     ConnectedComponent();
 
-    const QList<QPoint>& ends() const { return _ends; };
+    const QList<QPoint>& ends() const { return _ends; }
 
 public:
 

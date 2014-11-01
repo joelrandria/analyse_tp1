@@ -71,5 +71,6 @@ void WorkspaceWindow::on_actionCloseFile_triggered()
 void WorkspaceWindow::on_actionEdgeDetection_triggered()
 {
     InteractiveEdgeDetectionDialog* dialog = new InteractiveEdgeDetectionDialog(_workspace->image(), this);
+    dialog->setWindowTitle(windowTitle() + " - Détection de contours");
     dialog->show();
 }
