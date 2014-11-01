@@ -29,7 +29,7 @@ public:
 
     void Bresenham(int row1, int col1, int row2, int col2);
 
-//    void fermetureSimple();
+    void fermeture();
 
     void sauveGradient(std::string chemainDeSauve ) const;
 
@@ -39,10 +39,6 @@ private:
 
     void seuillageBas(float seuilB);
     bool testeVoisin(int x, int y);
-//    bool connexe(int row, int col);
-
-
-//    bool extremites(int row, int col);
 
     void affinageX();
     void affinageY();
@@ -50,6 +46,10 @@ private:
     void affinageX_Y();
     void affinageV4();
 
+    Pixel neigbordPos(Pixel pix);
+    Pixel recherchExtr(Pixel origine, int direction, Pixel preced);
+    Pixel propagation(Pixel precedent, Pixel origine);
+    double prodScal(Pixel si, Pixel ori, Pixel dir);
 };
 
 #endif // GRADIENTMAPMAX_H

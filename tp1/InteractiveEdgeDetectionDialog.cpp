@@ -31,7 +31,9 @@ void InteractiveEdgeDetectionDialog::updateView()
     _gradientMapMax.seuillageHyest(hysterisisHighThreshold(), hysterisisLowThreshold());
     _gradientMapMax.affinage();
 
+
     ConnectedComponent::fromGradientMapMax(_gradientMapMax, _connectedComponents);
+    _gradientMapMax.fermeture();
 
     int mapWidth = _gradientMapMax.width();
     int mapHeight = _gradientMapMax.height();
