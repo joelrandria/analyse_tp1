@@ -4,6 +4,13 @@
 #include "GradientMap.h"
 #include "PixelGradientInfo.h"
 
+typedef struct Pixel Pixel;
+struct Pixel
+{
+    int r;
+    int c;
+};
+
 class GradientMapMax : public GradientMap
 {
 private:
@@ -22,7 +29,7 @@ public:
 
     void Bresenham(int row1, int col1, int row2, int col2);
 
-    void fermetureSimple();
+//    void fermetureSimple();
 
     void sauveGradient(std::string chemainDeSauve ) const;
 
@@ -32,10 +39,10 @@ private:
 
     void seuillageBas(float seuilB);
     bool testeVoisin(int x, int y);
-    bool connexe(int row, int col);
+//    bool connexe(int row, int col);
 
 
-    bool extremites(int row, int col);
+//    bool extremites(int row, int col);
 
     void affinageX();
     void affinageY();

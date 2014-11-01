@@ -53,7 +53,7 @@ void InteractiveEdgeDetectionDialog::updateView()
             {
             case 0: // Direction X => Rouge
 
-                pixelColor = qRgb(composantGradient.valS, 0, 0);
+                pixelColor = qRgb(composantGradient.valS    , 0, 0);
                 break;
 
             case 1: // Direction Y => Vert

@@ -119,23 +119,49 @@ void GradientMapMax::Bresenham(int row1,int col1,int row2,int col2)
     }
 }
 
-void GradientMapMax::fermetureSimple()
-{
-    for (int row = 1; row < _rows-1; row++)
-    {
-        for(int col = 1; col < _cols-1; col++ )
-        {
-            if(_maxGradients[row][col].valS == 0)
-            {
-                if (extremites(row, col) == true)
-                {
-                    if (!connexe(row, col))
-                        _maxGradients[row][col].valS = 255;
-                }
-            }
-        }
-    }
-}
+//void GradientMapMax::fermeture()
+//{
+//    Pixel p1,p2;
+
+//    for(int row = 1; row < _rows; row++)
+//    {
+//        for(int col = 1; col < _cols; col++)
+//        {
+//            if(_maxGradients[row][col].end == true)
+//            {
+//                p1.r = row;
+//                p1.c = col;
+
+//                Pixel pos = neigbordPos(p1);
+//                p2 = recherchExtr(p1, _maxGradients[row][col].dir, pos);
+//                if (p2.r != -1)
+//                {
+//                    _maxGradients[p1.r][p1.c].end = false;
+//                    _maxGradients[p2.r][p2.c].end = false;
+//                    Bresenham(p1.r,p1.c,p2.r,p2.c);
+//                }
+//            }
+
+//        }
+//    }
+//}
+
+//Pixel GradientMapMax::neigbordPos(Pixel pix)
+//{
+//    Pixel position;
+//    position.r = -1;
+//    position.c = -1;
+//    for(int row = pix.r-1; row <= pix.r+1; row++)
+//    {
+//        for(int col = pix.c-1; col <= pix.c+1; col++)
+//        {
+
+//        }
+//    }
+
+//   return position;
+//}
+
 /***********PRIVATE**************/
 
 void GradientMapMax::affinageX()
@@ -226,43 +252,6 @@ void GradientMapMax::affinageV4()
             }
         }
     }
-}
-
-bool GradientMapMax::extremites(int row, int col)
-{
-    int cpt = 0;
-
-    for (int i = row-1 ; i <= row+1; ++i)
-    {
-        for (int j = col-1; j <= col+1; ++j)
-        {
-            if (_maxGradients[i][j].end == true) cpt++;
-        }
-    }
-
-    if (cpt > 1) return true;
-    return false;
-}
-
-bool GradientMapMax::connexe(int row, int col)
-{
-    int ID, cpt=0;
-
-    for (int i = row-1 ; i <= row+1; ++i)
-    {
-        for (int j = col-1; j <= col+1; ++j)
-        {
-            if (_maxGradients[i][j].end == true)
-            {
-              cpt++;
-              if ((cpt > 1) && (ID == _maxGradients[i][j].connectedComponentId))
-                  return true;
-
-              ID = _maxGradients[i][j].connectedComponentId;
-            }
-        }
-    }
-    return false;
 }
 
 void GradientMapMax::resize()
