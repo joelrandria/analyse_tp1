@@ -49,13 +49,25 @@ private slots:
 
     void updateGradientMapMax();
 
+    // Masque
     void on_maskTypeComboBox_currentIndexChanged(int index);
     void on_filteringTypeComboBox_currentIndexChanged(int index);
+
+    // Seuillage
+    void on_hysteresisThresholdingGroupBox_toggled(bool arg1);
 
     void on_highThresholdSlider_valueChanged(int value);
     void on_highThresholdLineEdit_valueChanged(int arg1);
     void on_lowThresholdSlider_valueChanged(int value);
     void on_lowThresholdLineEdit_valueChanged(int arg1);
+
+    // Affinage des contours
+    void enableEdgeRefining(bool enabled);
+    void on_edgeRefiningCheckbox_toggled(bool checked);
+
+    // Fermeture de contours
+    void enableEdgeClosure(bool enabled);
+    void on_edgeClosureCheckbox_toggled(bool checked);
 };
 
 #endif // INTERACTIVEEDGEDETECTIONDIALOG_H
