@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>652</width>
-    <height>521</height>
+    <width>749</width>
+    <height>516</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -130,13 +130,6 @@
          <bool>false</bool>
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Seuil haut :</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="1">
           <widget class="QSlider" name="highThresholdSlider">
            <property name="value">
@@ -150,6 +143,13 @@
            </property>
            <property name="tickInterval">
             <number>0</number>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Seuil haut :</string>
            </property>
           </widget>
          </item>
@@ -170,6 +170,16 @@
            </property>
           </widget>
          </item>
+         <item row="1" column="2">
+          <widget class="QSpinBox" name="lowThresholdLineEdit">
+           <property name="suffix">
+            <string>%</string>
+           </property>
+           <property name="value">
+            <number>10</number>
+           </property>
+          </widget>
+         </item>
          <item row="1" column="1">
           <widget class="QSlider" name="lowThresholdSlider">
            <property name="value">
@@ -186,14 +196,55 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="2">
-          <widget class="QSpinBox" name="lowThresholdLineEdit">
-           <property name="suffix">
-            <string>%</string>
+        </layout>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="edgeRefiningCheckbox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Affinage de contours</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QGroupBox" name="edgeClosureGroupBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="title">
+         <string>Fermeture de contours</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="1" column="0">
+          <widget class="QRadioButton" name="directionEdgeClosureRadioButton">
+           <property name="text">
+            <string>Dans la direction du contour</string>
            </property>
-           <property name="value">
-            <number>10</number>
+           <attribute name="buttonGroup">
+            <string notr="true">edgeClosureTypeBoutonGroup</string>
+           </attribute>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QRadioButton" name="gradientEdgeClosureRadioButton">
+           <property name="text">
+            <string>Dans la direction du gradient</string>
            </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+           <attribute name="buttonGroup">
+            <string notr="true">edgeClosureTypeBoutonGroup</string>
+           </attribute>
           </widget>
          </item>
         </layout>
@@ -212,26 +263,6 @@
         </property>
        </spacer>
       </item>
-      <item row="4" column="0">
-       <widget class="QCheckBox" name="edgeClosureCheckbox">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Fermeture de contours</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QCheckBox" name="edgeRefiningCheckbox">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Affinage de contours</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
    </layout>
@@ -241,7 +272,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>652</width>
+     <width>749</width>
      <height>25</height>
     </rect>
    </property>
@@ -327,4 +358,7 @@
    </hints>
   </connection>
  </connections>
+ <buttongroups>
+  <buttongroup name="edgeClosureTypeBoutonGroup"/>
+ </buttongroups>
 </ui>

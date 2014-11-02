@@ -41,12 +41,15 @@ void InteractiveEdgeDetectionDialog::updateView()
 
             ConnectedComponent::fromGradientMapMax(_gradientMapMax, _connectedComponents);
 
-            ///////////////////////////////////////////////////////////////////
-
-            _gradientMapMax.closeEdges();
-
-            ///////////////////////////////////////////////////////////////////
+            if(ui->edgeClosureGroupBox->isChecked())
+            {
+                if (ui->gradientEdgeClosureRadioButton->isChecked())
+                    _gradientMapMax.fermetureDirectionGradient();
+                else
+                    _gradientMapMax.fermetureDirectionContour();
+            }
         }
+
     }
 
     int mapWidth = _gradientMapMax.width();
@@ -188,7 +191,6 @@ void InteractiveEdgeDetectionDialog::on_filteringTypeComboBox_currentIndexChange
 void InteractiveEdgeDetectionDialog::on_hysteresisThresholdingGroupBox_toggled(bool arg1)
 {
     enableEdgeRefining(arg1);
-    enableEdgeClosure(arg1);
 
     updateView();
 }
@@ -219,21 +221,29 @@ void InteractiveEdgeDetectionDialog::on_lowThresholdLineEdit_valueChanged(int ar
 void InteractiveEdgeDetectionDialog::enableEdgeRefining(bool enabled)
 {
     ui->edgeRefiningCheckbox->setEnabled(enabled);
-    if (!enabled)
-        ui->edgeRefiningCheckbox->setChecked(false);
 }
-void InteractiveEdgeDetectionDialog::on_edgeRefiningCheckbox_toggled(bool)
+void InteractiveEdgeDetectionDialog::on_edgeRefiningCheckbox_toggled(bool arg1)
 {
+    enableEdgeClosure(arg1);
+
     updateView();
 }
 
 void InteractiveEdgeDetectionDialog::enableEdgeClosure(bool enabled)
 {
-    ui->edgeClosureCheckbox->setEnabled(enabled);
+    ui->edgeClosureGroupBox->setEnabled(enabled);
     if (!enabled)
-        ui->edgeClosureCheckbox->setChecked(false);
+        ui->edgeClosureGroupBox->setChecked(false);
 }
-void InteractiveEdgeDetectionDialog::on_edgeClosureCheckbox_toggled(bool)
+void InteractiveEdgeDetectionDialog::on_edgeClosureGroupBox_toggled(bool)
+{
+    updateView();
+}
+void InteractiveEdgeDetectionDialog::on_gradientEdgeClosureRadioButton_toggled(bool)
+{
+    updateView();
+}
+void InteractiveEdgeDetectionDialog::on_directionEdgeClosureRadioButton_toggled(bool)
 {
     updateView();
 }

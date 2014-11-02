@@ -67,7 +67,9 @@ private slots:
 
     // Fermeture de contours
     void enableEdgeClosure(bool enabled);
-    void on_edgeClosureCheckbox_toggled(bool checked);
+    void on_edgeClosureGroupBox_toggled(bool arg1);
+    void on_gradientEdgeClosureRadioButton_toggled(bool checked);
+    void on_directionEdgeClosureRadioButton_toggled(bool checked);
 };
 
 #endif // INTERACTIVEEDGEDETECTIONDIALOG_H

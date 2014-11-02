@@ -1,8 +1,5 @@
 ﻿#include "GradientMapMax.h"
 
-#include <QString>
-#include <QDebug>
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <fstream>
@@ -132,7 +129,7 @@ void GradientMapMax::resetConnectedComponentsInfo()
             composantAt(row, col).resetConnectedComponentInfo();
 }
 
-void GradientMapMax::closeEdges()
+void GradientMapMax::fermetureDirectionContour()
 {
     for (int row = 0; row < _rows; ++row)
     {
@@ -147,7 +144,7 @@ void GradientMapMax::closeEdges()
 
                 if (!edgeLocalDirection.isNull())
                 {
-                    QPoint target = findMatchingEndpoint(source, edgeLocalDirection, cos(M_PI / 5), 10);
+                    QPoint target = findMatchingEndpoint(source, edgeLocalDirection, cos(M_PI / 4), 15);
                     if (!target.isNull())
                     {
                         Bresenham(source.y(), source.x(), target.y(), target.x());
@@ -159,17 +156,6 @@ void GradientMapMax::closeEdges()
             }
         }
     }
-
-    ///////////////////////////////////////////////////////////////////
-
-//    QVector2D localDirection = getEndpointLocalDirection(QPoint(124, 149), 5);
-
-//    qDebug() << QString("localDirection = <%1, %2>")
-//                .arg(localDirection.x()).arg(localDirection.y());
-
-//    int test = 42;
-
-    ///////////////////////////////////////////////////////////////////
 }
 void GradientMapMax::getEndpointConnectedPoints(const QPoint& point, int maxAnteriorityDepth, QList<QPoint>& points)
 {
@@ -248,48 +234,227 @@ QPoint GradientMapMax::findMatchingEndpoint(const QPoint& source, QVector2D sour
     return QPoint();
 }
 
-//void GradientMapMax::fermeture()
-//{
-//    Pixel p1,p2;
+void GradientMapMax::fermetureDirectionGradient()
+{
+    Pixel p1,p2;
 
-//    for(int row = 1; row < _rows; row++)
-//    {
-//        for(int col = 1; col < _cols; col++)
-//        {
-//            if(_maxGradients[row][col].end == true)
-//            {
-//                p1.r = row;
-//                p1.c = col;
+    for(int row = 1; row < _rows-1; row++)
+    {
+        for(int col = 1; col < _cols-1; col++)
+        {
+            if(_maxGradients[row][col].end == true)
 
-//                Pixel pos = neigbordPos(p1);
-//                p2 = recherchExtr(p1, _maxGradients[row][col].dir, pos);
-//                if (p2.r != -1)
-//                {
-//                    _maxGradients[p1.r][p1.c].end = false;
-//                    _maxGradients[p2.r][p2.c].end = false;
-//                    Bresenham(p1.r,p1.c,p2.r,p2.c);
-//                }
-//            }
+            {
+                p1.r = row;
+                p1.c = col;
 
-//        }
-//    }
-//}
+                Pixel prev = neigbordPos(p1);//pos(-1,-1) si il n'a pas de voisins
 
-//Pixel GradientMapMax::neigbordPos(Pixel pix)
-//{
-//    Pixel position;
-//    position.r = -1;
-//    position.c = -1;
-//    for(int row = pix.r-1; row <= pix.r+1; row++)
-//    {
-//        for(int col = pix.c-1; col <= pix.c+1; col++)
-//        {
+                p2 = recherchExtr(p1, _maxGradients[row][col].dir, prev);
 
-//        }
-//    }
+                if (p2.r != -1)
+                {
+//                    qDebug() << QString("<%1, %2> => <%3, %4> (dir = <%3, %4>)")
+//                                .arg(p1.r).arg(p1.c)
+//                                .arg(p2.r).arg(p2.c);
 
-//   return position;
-//}
+                    //_maxGradients[p1.r][p1.c].end = false;
+                    //_maxGradients[p2.r][p2.c].end = false;
+                    Bresenham(p1.r,p1.c,p2.r,p2.c);
+                }
+                else
+                {
+//                    qDebug() << QString("Aucun raccordement trouvÃ© pour <%1, %2>").arg(p1.r).arg(p1.c);
+                }
+            }
+
+        }
+    }
+}
+
+Pixel GradientMapMax::neigbordPos(Pixel pix)
+{
+    Pixel position;
+    position.r = -1;
+    position.c = -1;
+
+    for(int row = pix.r-1; row <= pix.r+1; row++)
+    {
+        for(int col = pix.c-1; col <= pix.c+1; col++)
+        {
+            if (row == pix.r && col == pix.c)
+                continue;
+
+            if (_maxGradients[row][col].valS != 0)
+            {
+                position.r = row;
+                position.c = col;
+                return position;
+            }
+        }
+    }
+
+   return position;
+}
+Pixel GradientMapMax::recherchExtr(Pixel origine, int direction, Pixel preced)
+{
+//    qDebug() << QString("recherchExtr(origine=<%1,%2>, preced=<%3,%4>)")
+//                .arg(origine.r).arg(origine.c)
+//                .arg(preced.r).arg(preced.c);
+    Pixel temp;
+    temp.r = -1;
+    temp.c = -1;
+
+    if(preced.r == -1)
+    {
+        Pixel virtuel;
+        switch (direction)
+        {
+        case 0:
+            virtuel.r = origine.r -1;
+            virtuel.c = origine.c;
+            recherchExtr(origine, direction, virtuel);
+
+            virtuel.r = origine.r +1;
+            recherchExtr(origine, direction, virtuel);
+            break;
+
+        case 1:
+            virtuel.c = origine.c +1;
+            virtuel.r = origine.r;
+            recherchExtr(origine, direction, virtuel);
+
+            virtuel.c = origine.c -1;
+            recherchExtr(origine, direction, virtuel);
+            break;
+
+        case 2:
+            virtuel.r = origine.r +1;
+            virtuel.c = origine.c +1;
+            recherchExtr(origine, direction, virtuel);
+
+            virtuel.r = origine.r -1;
+            virtuel.c = origine.c -1;
+            recherchExtr(origine, direction, virtuel);
+            break;
+
+        case 3:
+            virtuel.r = origine.r -1;
+            virtuel.c = origine.c +1;
+            recherchExtr(origine, direction, virtuel);
+
+            virtuel.r = origine.r +1;
+            virtuel.c = origine.c -1;
+            recherchExtr(origine, direction, virtuel);
+            break;
+        }
+    }
+    else
+    {
+        switch (direction)
+        {
+        case 0:
+            if(preced.r == origine.r)  return temp;
+            preced.c = origine.c;
+            break;
+
+        case 1:
+            if(preced.c == origine.c) return temp;
+            preced.r = origine.r;
+            break;
+
+        case 2:
+            if(((preced.r == origine.r-1)&&(preced.c == origine.c+1))
+                    ||((preced.r == origine.r+1)&&(preced.c == origine.c-1)))
+                return temp;
+            if((preced.c < origine.c)&& (preced.r == origine.r)) preced.r -= 1;
+            else if ((preced.c > origine.c)&& (preced.r == origine.r)) preced.r +=1;
+            else if ((preced.r < origine.r)&& (preced.c == origine.c)) preced.c -=1;
+            else if ((preced.r > origine.r)&& (preced.c == origine.c)) preced.c +=1;
+            break;
+
+        case 3:
+            if(((preced.r == origine.r-1)&&(preced.c == origine.c-1))
+                    ||((preced.r == origine.r+1)&&(preced.c == origine.c+1)))
+                return temp;
+            if((preced.c < origine.c)&& (preced.r == origine.r)) preced.r += 1;
+            else if ((preced.c > origine.c)&& (preced.r == origine.r)) preced.r -=1;
+            else if ((preced.r < origine.r)&& (preced.c == origine.c)) preced.c +=1;
+            else if ((preced.r > origine.r)&& (preced.c == origine.c)) preced.c -=1;
+
+            break;
+        }
+    }
+
+    return propagation(preced, origine);
+}
+
+Pixel GradientMapMax::propagation(Pixel precedent, Pixel origine)
+{
+    Pixel dir, Si;
+
+    dir.r = origine.r - precedent.r;
+    dir.c = origine.c - precedent.c;
+
+//    qDebug() << QString("dir=<%1, %2>").arg(dir.r).arg(dir.c);
+    int maxR = origine.r+15;
+    int maxC = origine.c+15;
+    int minR = origine.r-15;
+    int minC = origine.c-15;
+    while (((origine.r < maxR) && (origine.c < maxC) && (origine.r > minR) && (origine.c > minC))
+        &&((origine.r < _rows-1) && (origine.c < _cols-1) && (origine.r > 0) && (origine.c > 0)))
+    {
+       for (int row = origine.r-1; row <= origine.r+1; row++)
+        {
+            for (int col = origine.c-1; col <= origine.c+1; col++)
+            {
+                if (row == origine.r && col == origine.c)
+                    continue;
+
+                Si.r = row;
+                Si.c = col;
+
+                if (prodScal(Si, origine, dir) > 0)//angle Pi
+                {
+                    if (_maxGradients[Si.r][Si.c].valS != 0)
+                    {
+                        if (_maxGradients[Si.r][Si.c].end == true)
+                        {
+                            return Si;
+                        }
+                        else
+                        {
+                            Si.r = -1;
+                            Si.c = -1;
+                            return Si;
+                        }
+                    }
+                }
+            }
+        }
+
+       origine.r = origine.r + dir.r;
+       origine.c = origine.c + dir.c;
+    }
+
+    Si.r = -1;
+    Si.c = -1;
+
+    return Si;
+}
+
+double GradientMapMax::prodScal(Pixel si, Pixel ori, Pixel dir)
+{
+    double res;
+    Pixel temp;
+
+    temp.r = si.r - ori.r;
+    temp.c = si.c - ori.c;
+
+    res = (temp.r * dir.r) + (temp.c * dir.c);
+
+    return res;
+}
 
 /***********PRIVATE**************/
 
@@ -309,6 +474,7 @@ void GradientMapMax::affinageX()
         }
     }
 }
+
 void GradientMapMax::affinageY()
 {
     for (int row = 1; row < _rows-1; row++)
@@ -325,6 +491,7 @@ void GradientMapMax::affinageY()
         }
     }
 }
+
 void GradientMapMax::affinageYX()
 {
     for (int row = 1; row < _rows-1; row++)
@@ -341,6 +508,7 @@ void GradientMapMax::affinageYX()
         }
     }
 }
+
 void GradientMapMax::affinageX_Y()
 {
     for (int row = 1; row < _rows-1; row++)
@@ -357,6 +525,7 @@ void GradientMapMax::affinageX_Y()
         }
     }
 }
+
 void GradientMapMax::affinageV4()
 {
     for (int row = 1; row < _rows-1; row++)

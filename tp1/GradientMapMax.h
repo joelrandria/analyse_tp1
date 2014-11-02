@@ -28,12 +28,13 @@ public:
 
     void seuillageHyest (float seuilH, float seuilBas);
     void affinage ();
-    void Bresenham(int row1, int col1, int row2, int col2);
-//    void fermetureSimple();
 
     void resetConnectedComponentsInfo();
 
-    void closeEdges();
+    void fermetureDirectionGradient();
+    void fermetureDirectionContour();
+
+    void Bresenham(int row1, int col1, int row2, int col2);
 
     void sauveGradient(std::string chemainDeSauve ) const;
 
@@ -43,8 +44,6 @@ private:
 
     void seuillageBas(float seuilB);
     bool testeVoisin(int x, int y);
-//    bool connexe(int row, int col);
-//    bool extremites(int row, int col);
 
     void affinageX();
     void affinageY();
@@ -55,6 +54,11 @@ private:
     void getEndpointConnectedPoints(const QPoint& point, int maxAnteriorityDepth, QList<QPoint>& points);
     QVector2D getEndpointLocalDirection(const QPoint& point, int maxAnteriorityDepth);
     QPoint findMatchingEndpoint(const QPoint& source, QVector2D sourceDirection, float toleranceCosAngle, int searchFrameSize);
+
+    Pixel neigbordPos(Pixel pix);
+    Pixel recherchExtr(Pixel origine, int direction, Pixel preced);
+    Pixel propagation(Pixel precedent, Pixel origine);
+    double prodScal(Pixel si, Pixel ori, Pixel dir);
 };
 
 #endif // GRADIENTMAPMAX_H
