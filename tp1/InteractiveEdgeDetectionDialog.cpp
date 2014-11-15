@@ -6,6 +6,8 @@
 #include <QList>
 #include <QLine>
 
+#include "modelmath.h"
+
 #include "ConnectedComponent.h"
 
 InteractiveEdgeDetectionDialog::InteractiveEdgeDetectionDialog(const Image& image,
@@ -122,38 +124,30 @@ void InteractiveEdgeDetectionDialog::updateView()
     }
     else
     {
-//        int i;
-
         // Affichage du modèle de contour (segments)
-//        QList<QLine> edgeSegments;
+        ModelMath model;
+        model.getSegments(_gradientMapMax);
 
-//        for (i = 0; i < _connectedComponents.size(); ++i)
-//            edgeSegments += _connectedComponents[i].segments();
-
-//        QPainter painter(pImage);
-
-//        for (i = 0; i < edgeSegments.size(); ++i)
-//            painter.drawLine(edgeSegments[i]);
-
-        //////////////////////// ToDo: Virer ce test ////////////////////////
+        QList<QList<QLine> > edgeSegments = model.modelMath();
 
         QPainter painter(pImage);
+
         painter.fillRect(0, 0, pImage->width(), pImage->height(), qRgb(0, 0, 0));
 
-        ConnectedComponent testComponent;
-        for (int i = 0; i < _connectedComponents.size(); ++i)
-            for (int j = 0; j < _connectedComponents[i].ends().size(); ++j)
-                if (_connectedComponents[i].ends()[j] == QPoint(224, 173))
-                    testComponent = _connectedComponents[i];
-
         painter.setPen(qRgb(255, 255, 255));
+        for (int i = 0; i < edgeSegments.size(); ++i)
+            for (int j = 0; j < edgeSegments[i].size(); ++j)
+                painter.drawLine(edgeSegments[i][j]);
 
-        QList<QList<QPoint> > testSubComponents = testComponent.subComponents();
-        for (int j = 0; j < testSubComponents.size(); ++j)
-            for (int k = 0; k < testSubComponents[j].size(); ++k)
-                painter.drawPoint(testSubComponents[j][k]);
-
-        /////////////////////////////////////////////////////////////////////
+        painter.setPen(qRgb(0, 255, 0));
+        for (int i = 0; i < edgeSegments.size(); ++i)
+        {
+            for (int j = 0; j < edgeSegments[i].size(); ++j)
+            {
+                painter.drawPoint(edgeSegments[i][j].p1());
+                painter.drawPoint(edgeSegments[i][j].p2());
+            }
+        }
     }
 
     ui->pixmapLabel->setPixmap(QPixmap::fromImage(*pImage));

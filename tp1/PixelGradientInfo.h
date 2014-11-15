@@ -14,6 +14,8 @@ public:
     bool end = false;
     int connectedComponentId = -1;
 
+    bool visite = false;
+
 public:
 
     PixelGradientInfo()

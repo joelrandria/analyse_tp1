@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     GradientMap.cpp \
     GradientMapMax.cpp \
     ConnectedComponent.cpp \
-    InteractiveEdgeDetectionDialog.cpp
+    InteractiveEdgeDetectionDialog.cpp \
+    modelmath.cpp
 
 HEADERS  += \
     Workspace.h \
@@ -38,7 +39,8 @@ HEADERS  += \
     GradientMapMax.h \
     ConnectedComponent.h \
     PixelGradientInfo.h \
-    InteractiveEdgeDetectionDialog.h
+    InteractiveEdgeDetectionDialog.h \
+    modelmath.h
 
 FORMS    += \
     WorkspaceWindow.ui \

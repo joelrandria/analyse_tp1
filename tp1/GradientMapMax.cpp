@@ -62,6 +62,11 @@ PixelGradientInfo& GradientMapMax::composantAt(int row, int col)
     return _maxGradients[row][col];
 }
 
+PixelGradientInfo& GradientMapMax::composantAt(QPoint point)
+{
+    return _maxGradients[point.y()][point.x()];
+}
+
 void GradientMapMax::Bresenham(int row1,int col1,int row2,int col2)
 {
     int drow, dcol, i, e;

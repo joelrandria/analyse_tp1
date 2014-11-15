@@ -3,7 +3,7 @@
 
 #include "GradientMap.h"
 #include "PixelGradientInfo.h"
-
+#include <QPoint>
 #include <QList>
 #include <QVector2D>
 
@@ -25,6 +25,7 @@ public:
     GradientMapMax(const Image& image, const GradientKernel& kernel, const bool normaliser=false);
 
     PixelGradientInfo& composantAt(int row, int col);
+    PixelGradientInfo& composantAt(QPoint point);
 
     void seuillageHyest (float seuilH, float seuilBas);
 
