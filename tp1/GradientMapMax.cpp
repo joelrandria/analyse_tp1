@@ -78,11 +78,11 @@ void GradientMapMax::Bresenham(int row1,int col1,int row2,int col2)
     row=row1;
     col=col1;
 
-    _maxGradients[row][col].valS = 200;
+    _maxGradients[row][col].valS = 255;
 
     if(drow > dcol)
     {
-//        _maxGradients[row][col].valS = 200;
+//        _maxGradients[row][col].valS = 255;
         e = 2*dcol - drow;
         inc1 = 2*( dcol -drow);
         inc2 = 2*dcol;
@@ -95,12 +95,12 @@ void GradientMapMax::Bresenham(int row1,int col1,int row2,int col2)
             }
             else e += inc2;
             row += incR;
-            _maxGradients[row][col].valS = 200;
+            _maxGradients[row][col].valS = 255;
         }
     }
     else
     {
-//        _maxGradients[row][col].valS = 200;
+//        _maxGradients[row][col].valS = 255;
         e = 2*drow - dcol;
         inc1 = 2*( drow - dcol);
         inc2 = 2*drow;
@@ -114,7 +114,7 @@ void GradientMapMax::Bresenham(int row1,int col1,int row2,int col2)
             else e += inc2;
             col += incC;
             //draw_pixel(x,y, BLACK);
-            _maxGradients[row][col].valS = 200;
+            _maxGradients[row][col].valS = 255;
         }
     }
 }

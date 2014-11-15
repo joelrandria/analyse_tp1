@@ -2,6 +2,11 @@
 #include "ui_InteractiveEdgeDetectionDialog.h"
 
 #include <QFileDialog>
+#include <QPainter>
+#include <QList>
+#include <QLine>
+
+#include "ConnectedComponent.h"
 
 InteractiveEdgeDetectionDialog::InteractiveEdgeDetectionDialog(const Image& image,
                                                                QWidget *parent):
@@ -47,6 +52,10 @@ void InteractiveEdgeDetectionDialog::updateView()
                     _gradientMapMax.fermetureDirectionGradient();
                 else
                     _gradientMapMax.fermetureDirectionContour();
+
+                _gradientMapMax.affinageV4();
+
+                ConnectedComponent::fromGradientMapMax(_gradientMapMax, _connectedComponents);
             }
         }
 
@@ -57,56 +66,94 @@ void InteractiveEdgeDetectionDialog::updateView()
 
     QImage* pImage = new QImage(mapWidth, mapHeight, QImage::Format_RGB888);
 
-    // Affichage des pixels filtrés
-    PixelGradientInfo composantGradient;
-    for (int row = 0; row < mapHeight; ++row)
+    if (!ui->displayModelOnlyCheckBox->isChecked())
     {
-        for (int col = 0; col < mapWidth; ++col)
+        // Affichage des pixels filtrés
+        PixelGradientInfo composantGradient;
+        for (int row = 0; row < mapHeight; ++row)
         {
-            composantGradient = _gradientMapMax.composantAt(row, col);
-
-            uint pixelColor = 0;
-            switch (composantGradient.dir)
+            for (int col = 0; col < mapWidth; ++col)
             {
-            case 0: // Direction X => Rouge
+                composantGradient = _gradientMapMax.composantAt(row, col);
 
-                pixelColor = qRgb(bDrawRawValues ? composantGradient.val : composantGradient.valS, 0, 0);
+                uint pixelColor = 0;
+                switch (composantGradient.dir)
+                {
+                case 0: // Direction X => Rouge
 
-                break;
+                    pixelColor = qRgb(bDrawRawValues ? composantGradient.val : composantGradient.valS, 0, 0);
 
-            case 1: // Direction Y => Vert
+                    break;
 
-                pixelColor = qRgb(0, bDrawRawValues ? composantGradient.val : composantGradient.valS, 0);
+                case 1: // Direction Y => Vert
 
-                break;
+                    pixelColor = qRgb(0, bDrawRawValues ? composantGradient.val : composantGradient.valS, 0);
 
-            case 2: // Direction YX => Bleu
+                    break;
 
-                pixelColor = qRgb(0, 0, bDrawRawValues ? composantGradient.val : composantGradient.valS);
+                case 2: // Direction YX => Bleu
 
-                break;
+                    pixelColor = qRgb(0, 0, bDrawRawValues ? composantGradient.val : composantGradient.valS);
 
-            case 3: // Direction X-Y => Jaune
+                    break;
 
-                pixelColor = qRgb(bDrawRawValues ? composantGradient.val : composantGradient.valS, bDrawRawValues ? composantGradient.val : composantGradient.valS, 0);
+                case 3: // Direction X-Y => Jaune
 
-                break;
+                    pixelColor = qRgb(bDrawRawValues ? composantGradient.val : composantGradient.valS, bDrawRawValues ? composantGradient.val : composantGradient.valS, 0);
+
+                    break;
+                }
+
+                pImage->setPixel(col, row, pixelColor);
             }
+        }
 
-            pImage->setPixel(col, row, pixelColor);
+        // Affichage des extrémités des composantes connexes en blanc
+        ConnectedComponent component;
+        for (int i = 0; i < _connectedComponents.size(); ++i)
+        {
+            component = _connectedComponents[i];
+            for (int j = 0; j < component.ends().size(); ++j)
+            {
+                QPoint end = component.ends()[j];
+                pImage->setPixel(end, qRgb(255, 255, 255));
+            }
         }
     }
-
-    // Affichage des extrémités des composantes connexes en blanc
-    ConnectedComponent component;
-    for (int i = 0; i < _connectedComponents.size(); ++i)
+    else
     {
-        component = _connectedComponents[i];
-        for (int j = 0; j < component.ends().size(); ++j)
-        {
-            QPoint end = component.ends()[j];
-            pImage->setPixel(end, qRgb(255, 255, 255));
-        }
+//        int i;
+
+        // Affichage du modèle de contour (segments)
+//        QList<QLine> edgeSegments;
+
+//        for (i = 0; i < _connectedComponents.size(); ++i)
+//            edgeSegments += _connectedComponents[i].segments();
+
+//        QPainter painter(pImage);
+
+//        for (i = 0; i < edgeSegments.size(); ++i)
+//            painter.drawLine(edgeSegments[i]);
+
+        //////////////////////// ToDo: Virer ce test ////////////////////////
+
+        QPainter painter(pImage);
+        painter.fillRect(0, 0, pImage->width(), pImage->height(), qRgb(0, 0, 0));
+
+        ConnectedComponent testComponent;
+        for (int i = 0; i < _connectedComponents.size(); ++i)
+            for (int j = 0; j < _connectedComponents[i].ends().size(); ++j)
+                if (_connectedComponents[i].ends()[j] == QPoint(224, 173))
+                    testComponent = _connectedComponents[i];
+
+        painter.setPen(qRgb(255, 255, 255));
+
+        QList<QList<QPoint> > testSubComponents = testComponent.subComponents();
+        for (int j = 0; j < testSubComponents.size(); ++j)
+            for (int k = 0; k < testSubComponents[j].size(); ++k)
+                painter.drawPoint(testSubComponents[j][k]);
+
+        /////////////////////////////////////////////////////////////////////
     }
 
     ui->pixmapLabel->setPixmap(QPixmap::fromImage(*pImage));
@@ -234,6 +281,8 @@ void InteractiveEdgeDetectionDialog::enableEdgeClosure(bool enabled)
     ui->edgeClosureGroupBox->setEnabled(enabled);
     if (!enabled)
         ui->edgeClosureGroupBox->setChecked(false);
+
+    enableModelDisplay(enabled);
 }
 void InteractiveEdgeDetectionDialog::on_edgeClosureGroupBox_toggled(bool)
 {
@@ -244,6 +293,17 @@ void InteractiveEdgeDetectionDialog::on_gradientEdgeClosureRadioButton_toggled(b
     updateView();
 }
 void InteractiveEdgeDetectionDialog::on_directionEdgeClosureRadioButton_toggled(bool)
+{
+    updateView();
+}
+
+void InteractiveEdgeDetectionDialog::enableModelDisplay(bool enable)
+{
+    ui->displayModelOnlyCheckBox->setEnabled(enable);
+    if (!enable)
+        ui->displayModelOnlyCheckBox->setChecked(false);
+}
+void InteractiveEdgeDetectionDialog::on_displayModelOnlyCheckBox_toggled(bool)
 {
     updateView();
 }

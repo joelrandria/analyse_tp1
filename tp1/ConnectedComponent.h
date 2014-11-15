@@ -26,12 +26,18 @@ public:
 
     const QList<QPoint>& ends() const { return _ends; }
 
+    // À implémenter
+    const QList<QLine> segments() const;
+
 public:
 
     static void fromGradientMapMax(GradientMapMax& map,
                                    QList<ConnectedComponent>& components);
 
-private:
+public: // ToDo JRA: ConnectedComponent: section publique à privatiser
+
+    // À implémenter
+    const QList<QList<QPoint> > subComponents() const;
 
     static void getConnectedComponent(GradientMapMax& map,
                                       const QPoint& point,

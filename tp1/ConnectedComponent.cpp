@@ -52,6 +52,19 @@ void ConnectedComponent::fromGradientMapMax(GradientMapMax &map, QList<Connected
     }
 }
 
+const QList<QList<QPoint> > ConnectedComponent::subComponents() const
+{
+    QList<QList<QPoint> > subComponents;
+
+    //////////////////////// ToDo: Virer ce test ////////////////////////
+
+
+
+    /////////////////////////////////////////////////////////////////////
+
+    return subComponents;
+}
+
 void ConnectedComponent::getConnectedComponent(GradientMapMax &map,
                                                const QPoint &point,
                                                const QPoint &previous,

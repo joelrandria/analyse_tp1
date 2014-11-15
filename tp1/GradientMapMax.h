@@ -27,7 +27,9 @@ public:
     PixelGradientInfo& composantAt(int row, int col);
 
     void seuillageHyest (float seuilH, float seuilBas);
-    void affinage ();
+
+    void affinage();
+    void affinageV4();
 
     void resetConnectedComponentsInfo();
 
@@ -49,7 +51,6 @@ private:
     void affinageY();
     void affinageYX();
     void affinageX_Y();
-    void affinageV4();
 
     void getEndpointConnectedPoints(const QPoint& point, int maxAnteriorityDepth, QList<QPoint>& points);
     QVector2D getEndpointLocalDirection(const QPoint& point, int maxAnteriorityDepth);
